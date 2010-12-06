@@ -13,7 +13,7 @@ namespace Location_Scheduler
         [MTAThread]
         static void Main()
         {
-            Application.Run(new MainForm());
+            Application.Run(new FormMain());
         }
     }
 }

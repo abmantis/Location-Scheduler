@@ -10,9 +10,9 @@ using StedySoft.SenseSDK;
 using StedySoft.SenseSDK.DrawingCE;
 namespace Location_Scheduler
 {
-    public partial class MainForm : Form
+    public partial class FormMain : Form
     {
-        public MainForm()
+        public FormMain()
         {
             InitializeComponent();
         }
@@ -25,6 +25,12 @@ namespace Location_Scheduler
         private void menuItem1_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void btAdd_Click_1(object sender, EventArgs e)
+        {
+            FormTaskEdit formTaskEdit = new FormTaskEdit();
+            formTaskEdit.ShowDialog();
         }
     }
 }
