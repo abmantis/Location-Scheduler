@@ -33,7 +33,6 @@
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.btAdd = new StedySoft.SenseSDK.SenseButtonControl();
-			this.lstTarf = new System.Windows.Forms.ListBox();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -59,13 +58,6 @@
 			this.btAdd.Text = "Add task";
 			this.btAdd.Click += new System.EventHandler(this.btAdd_Click_1);
 			// 
-			// lstTarf
-			// 
-			this.lstTarf.Location = new System.Drawing.Point(4, 37);
-			this.lstTarf.Name = "lstTarf";
-			this.lstTarf.Size = new System.Drawing.Size(233, 184);
-			this.lstTarf.TabIndex = 1;
-			// 
 			// FormMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -74,7 +66,6 @@
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(235)))), ((int)(((byte)(239)))));
 			this.ClientSize = new System.Drawing.Size(240, 268);
 			this.Controls.Add(this.btAdd);
-			this.Controls.Add(this.lstTarf);
 			this.Menu = this.mainMenu1;
 			this.Name = "FormMain";
 			this.Text = "Location Scheduler";
@@ -84,8 +75,7 @@
 
         #endregion
 
-        private StedySoft.SenseSDK.SenseButtonControl btAdd;
-        public System.Windows.Forms.ListBox lstTarf;
+		private StedySoft.SenseSDK.SenseButtonControl btAdd;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItem2;
 

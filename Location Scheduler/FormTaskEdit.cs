@@ -143,7 +143,8 @@ namespace Location_Scheduler
 
 		void OnBtnSetLocation(object Sender)
 		{
-			
+			FormMap frmMap = new FormMap();
+			frmMap.ShowDialog();
 		}
 
 		void OnBtnSelectApplication(object Sender)
