@@ -13,34 +13,42 @@ namespace Location_Scheduler
 {
 	public partial class FormMap : Form
 	{
-		PointLatLng startPos = new PointLatLng(41.1780080, -8.6087320);
-		GMapMarkerCross centerCross;
-		GMapOverlay overlay;
+		#region Declarations
+
+		private GMapOverlay overlay;
+		private PointLatLng startPos = new PointLatLng(41.1780080, -8.6087320);
+
+		private GMapMarkerCross centerCross;
+		public GMapMarkerCross CenterCross
+		{
+			get { return centerCross; }
+			set { centerCross = value; isPosSelected = true; }
+		}
+
+		private bool isPosSelected = false;
+		public bool IsPosSelected
+		{
+			get { return isPosSelected; }
+		}
+		
+		#endregion
+
 		public FormMap()
 		{
 			InitializeComponent();
 
 		}
 
-		private void menuItemSelect_Click(object sender, EventArgs e)
-		{
-			Close();
-		}
-
 		private void FormMap_Load(object sender, EventArgs e)
 		{
-#if DEBUG && false
-			this.map.Manager.Mode = AccessMode.ServerAndCache;
-#else
-			this.map.Manager.Mode = AccessMode.ServerOnly;
-#endif
 			menuItemSatellite.Checked = false;
+
+			this.map.Manager.Mode = AccessMode.ServerOnly;			
 			this.map.MapType = MapType.GoogleMap;
 			this.map.MaxZoom = 20;
 			this.map.MinZoom = 1;
 			this.map.Zoom = this.map.MinZoom + 5;
-			this.map.CurrentPosition = startPos;
-
+			
 			// map events
 			map.OnCurrentPositionChanged += new CurrentPositionChanged(Map_OnCurrentPositionChanged);
 
@@ -48,10 +56,19 @@ namespace Location_Scheduler
 			overlay = new GMapOverlay(this.map, "overlay");
 			this.map.Overlays.Add(overlay);
 
-			// Center cross
-			centerCross = new GMapMarkerCross(this.map.CurrentPosition);
-			overlay.Markers.Add(centerCross);
 
+			if (isPosSelected)
+			{
+				this.map.CurrentPosition = CenterCross.Position;
+			}
+			else
+			{
+				this.map.CurrentPosition = startPos;
+				centerCross = new GMapMarkerCross(this.map.CurrentPosition);				
+			}
+
+			// Center cross			
+			overlay.Markers.Add(centerCross);
 		}
 
 		private void Map_OnCurrentPositionChanged(PointLatLng point)
@@ -87,6 +104,17 @@ namespace Location_Scheduler
 		{
 			FormMapSearch frmSearch = new FormMapSearch(this.map);
 			frmSearch.ShowDialog();
+		}
+		
+		private void menuItemSelect_Click(object sender, EventArgs e)
+		{
+			isPosSelected = true;
+			Close();
+		}
+
+		private void menuItemCancel_Click(object sender, EventArgs e)
+		{
+			isPosSelected = false;
 		}
 
 	}

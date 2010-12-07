@@ -65,6 +65,7 @@
 			// menuItemCancel
 			// 
 			this.menuItemCancel.Text = "Cancel";
+			this.menuItemCancel.Click += new System.EventHandler(this.menuItemCancel_Click);
 			// 
 			// senseHeaderCtrl
 			// 

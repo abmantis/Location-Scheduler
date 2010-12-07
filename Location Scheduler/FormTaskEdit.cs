@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using StedySoft.SenseSDK;
 using StedySoft.SenseSDK.DrawingCE;
+using GMap.NET;
 
 
 namespace Location_Scheduler
@@ -17,15 +18,18 @@ namespace Location_Scheduler
 		#region Declarations
 		enum ActionTypes { SMS = 0, NOTIFICATION = 1, APP = 2 };
 
-		StedySoft.SenseSDK.SensePanelButtonItem btnSetLocation = null;
-		StedySoft.SenseSDK.SensePanelButtonItem btnSelectApplication = null;
-		StedySoft.SenseSDK.SensePanelTextboxItem tboxSubject = null;
-		StedySoft.SenseSDK.SensePanelTextboxItem tboxNotes = null;
-		StedySoft.SenseSDK.SensePanelTextboxItem tboxSMSRecipient = null;
-		StedySoft.SenseSDK.SensePanelTextboxItem tboxSMSBody = null;		
-		StedySoft.SenseSDK.SensePanelComboItem cbbActionType = null;
-		StedySoft.SenseSDK.SensePanelTimeItem timeMonitorStart = null;
-		StedySoft.SenseSDK.SensePanelTimeItem timeMonitorEnd = null;
+		private SensePanelButtonItem btnSetLocation = null;
+		private SensePanelButtonItem btnSelectApplication = null;
+		private SensePanelTextboxItem tboxSubject = null;
+		private SensePanelTextboxItem tboxNotes = null;
+		private SensePanelTextboxItem tboxSMSRecipient = null;
+		private SensePanelTextboxItem tboxSMSBody = null;
+		private SensePanelComboItem cbbActionType = null;
+		private SensePanelTimeItem timeMonitorStart = null;
+		private SensePanelTimeItem timeMonitorEnd = null;
+		private SensePanelItem txtLocation = null;
+
+		private FormMap frmMap = null;
 
 		#endregion
 
@@ -45,22 +49,29 @@ namespace Location_Scheduler
             this.senseListCtrl.BeginUpdate();
 			
 			// Subject textbox
-			tboxSubject = new StedySoft.SenseSDK.SensePanelTextboxItem();
-			tboxSubject = new StedySoft.SenseSDK.SensePanelTextboxItem("tboxSubject");
+			tboxSubject = new SensePanelTextboxItem();
+			tboxSubject = new SensePanelTextboxItem("tboxSubject");
 			tboxSubject.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
 			tboxSubject.LabelText = "Subject:";
 			tboxSubject.Text = "";
 			this.senseListCtrl.AddItem(tboxSubject);
 
 			// location button            
-			btnSetLocation = new StedySoft.SenseSDK.SensePanelButtonItem("btnSetLocation");
+			btnSetLocation = new SensePanelButtonItem("btnSetLocation");
 			btnSetLocation.LabelText = "Location:";
 			btnSetLocation.Text = "Set Location";
 			btnSetLocation.OnClick += new SensePanelButtonItem.ClickEventHandler(OnBtnSetLocation);
 			this.senseListCtrl.AddItem(btnSetLocation);
 
+			// location label
+			txtLocation = new SensePanelItem("txtLocation");
+			txtLocation.PrimaryTextAlignment = SenseAPIs.SenseFont.PanelTextAlignment.Top;
+//			txtLocation.PrimaryTextLineHeight = SenseAPIs.SenseFont.PanelTextLineHeight.SingleLine;
+			txtLocation.Visible = false;
+			this.senseListCtrl.AddItem(txtLocation);
+
 			// Action type combobox
-			cbbActionType = new StedySoft.SenseSDK.SensePanelComboItem("cbbActionType");
+			cbbActionType = new SensePanelComboItem("cbbActionType");
 			cbbActionType.OnSelectedIndexChanged += new SensePanelComboItem.SelectedIndexChangedEventHandler(OnCbbActionTypeSelectedIndexChanged);
 			this.senseListCtrl.AddItem(cbbActionType);			
 			cbbActionType.Items.Add(new SensePanelComboItem.Item("Show notification", ActionTypes.NOTIFICATION));
@@ -70,8 +81,8 @@ namespace Location_Scheduler
 			cbbActionType.SelectedIndex = 0;
 
 			// SMS recipient textbox
-			tboxSMSRecipient = new StedySoft.SenseSDK.SensePanelTextboxItem();
-			tboxSMSRecipient = new StedySoft.SenseSDK.SensePanelTextboxItem("tboxSMSRecipient");
+			tboxSMSRecipient = new SensePanelTextboxItem();
+			tboxSMSRecipient = new SensePanelTextboxItem("tboxSMSRecipient");
 			tboxSMSRecipient.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
 			tboxSMSRecipient.LabelText = "SMS Recipient:";
 			tboxSMSRecipient.Text = "";
@@ -79,8 +90,8 @@ namespace Location_Scheduler
 			this.senseListCtrl.AddItem(tboxSMSRecipient);
 
 			// SMS body textbox
-			tboxSMSBody = new StedySoft.SenseSDK.SensePanelTextboxItem();
-			tboxSMSBody = new StedySoft.SenseSDK.SensePanelTextboxItem("tboxSMSBody");
+			tboxSMSBody = new SensePanelTextboxItem();
+			tboxSMSBody = new SensePanelTextboxItem("tboxSMSBody");
 			tboxSMSBody.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
 			tboxSMSBody.LabelText = "SMS Text:";
 			tboxSMSBody.Multiline = true;
@@ -90,7 +101,7 @@ namespace Location_Scheduler
 			this.senseListCtrl.AddItem(tboxSMSBody);
 
 			// Select application button            
-			btnSelectApplication = new StedySoft.SenseSDK.SensePanelButtonItem("btnSelectApplication");
+			btnSelectApplication = new SensePanelButtonItem("btnSelectApplication");
 			btnSelectApplication.LabelText = "Application:";
 			btnSelectApplication.Text = "Select application";
 			btnSelectApplication.OnClick += new SensePanelButtonItem.ClickEventHandler(OnBtnSelectApplication);
@@ -99,8 +110,8 @@ namespace Location_Scheduler
 
 
 			// monitoring period time start
-			this.senseListCtrl.AddItem(new StedySoft.SenseSDK.SensePanelDividerItem("DividerItemMonitorPeriod", "Monitoring period"));
-			timeMonitorStart = new StedySoft.SenseSDK.SensePanelTimeItem("timeMonitorStart");
+			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemMonitorPeriod", "Monitoring period"));
+			timeMonitorStart = new SensePanelTimeItem("timeMonitorStart");
 			timeMonitorStart.AutoShowDialog = true;
 			timeMonitorStart.ButtonAnimation = true;
 			timeMonitorStart.PrimaryText = "Start monitoring at";
@@ -109,7 +120,7 @@ namespace Location_Scheduler
 			this.senseListCtrl.AddItem(timeMonitorStart);
 
 			// monitoring period time end
-			timeMonitorEnd = new StedySoft.SenseSDK.SensePanelTimeItem("timeMonitorEnd");
+			timeMonitorEnd = new SensePanelTimeItem("timeMonitorEnd");
 			timeMonitorEnd.AutoShowDialog = true;
 			timeMonitorEnd.ButtonAnimation = true;
 			timeMonitorEnd.PrimaryText = "End monitoring at";
@@ -117,9 +128,9 @@ namespace Location_Scheduler
 			this.senseListCtrl.AddItem(timeMonitorEnd);
 
 			// Notes textbox
-			this.senseListCtrl.AddItem(new StedySoft.SenseSDK.SensePanelDividerItem("DividerItemTaskNotes", "Task description"));
-			tboxNotes = new StedySoft.SenseSDK.SensePanelTextboxItem();
-			tboxNotes = new StedySoft.SenseSDK.SensePanelTextboxItem("tboxNotes");
+			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTaskNotes", "Task description"));
+			tboxNotes = new SensePanelTextboxItem();
+			tboxNotes = new SensePanelTextboxItem("tboxNotes");
 			tboxNotes.LayoutSytle = SenseTexboxLayoutStyle.Horizontal;
 			tboxNotes.LabelText = "";
 			tboxNotes.ShowSeparator = false;
@@ -143,8 +154,25 @@ namespace Location_Scheduler
 
 		void OnBtnSetLocation(object Sender)
 		{
-			FormMap frmMap = new FormMap();
+			if (frmMap == null)
+			{
+				frmMap = new FormMap();
+			}
 			frmMap.ShowDialog();
+			if (frmMap.IsPosSelected)
+			{				
+				Placemark place = GMaps.Instance.GetPlacemarkFromGeocoder(frmMap.CenterCross.Position);
+				if (place != null)
+				{
+					txtLocation.PrimaryText = place.Address;
+				}
+				else
+				{
+					txtLocation.PrimaryText = frmMap.CenterCross.Position.ToString();
+				}
+				btnSetLocation.ShowSeparator = false;
+				txtLocation.Visible = true;
+			}
 		}
 
 		void OnBtnSelectApplication(object Sender)
@@ -186,7 +214,7 @@ namespace Location_Scheduler
 			if (this.sip.Enabled)
 			{
 				SenseListControl.ISenseListItem IItem = this.senseListCtrl.FocusedItem;
-				Rectangle r = IItem.ClientRectangle;
+				System.Drawing.Rectangle r = IItem.ClientRectangle;
 				r.Offset(0, this.senseListCtrl.Bounds.Top);
 				if (IItem is SensePanelTextboxItem)
 				{
