@@ -8,19 +8,52 @@ using System.Windows.Forms;
 using GMap.NET;
 using StedySoft.SenseSDK.DrawingCE;
 using StedySoft.SenseSDK;
+using HelperLib;
 
 namespace Location_Scheduler
 {
-	public partial class FormMapSearch : Form
+	public partial class FormMapSearch : SenseListForm
 	{
 		GMap.NET.WindowsForms.GMapControl map;
-		public FormMapSearch(GMap.NET.WindowsForms.GMapControl map)
+		private SensePanelTextboxItem tboxAddress = null;
+		private SensePanelButtonItem btSearch = null;
+		public FormMapSearch(GMap.NET.WindowsForms.GMapControl map) : base()
 		{
 			InitializeComponent();
 			this.map = map;
 		}
 
-		private void btSearch_Click(object sender, EventArgs e)
+		private void FormMapSearch_Load(object sender, EventArgs e)
+		{
+			// turn off UI updating
+			this.senseListCtrl.BeginUpdate();
+
+			// Address textbox
+//			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTaskNotes", "Task description"));
+			tboxAddress = new SensePanelTextboxItem();
+			tboxAddress = new SensePanelTextboxItem("tboxAddress");
+			tboxAddress.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
+			tboxAddress.LabelText = "Address:";
+			tboxAddress.ShowSeparator = false;
+			tboxAddress.Multiline = true;
+			tboxAddress.Height = 200;
+			tboxAddress.Text = "";
+			this.senseListCtrl.AddItem(tboxAddress);
+
+			// Search button            
+			btSearch = new SensePanelButtonItem("btSearch");
+			btSearch.LabelText = "Application:";
+			btSearch.Text = "Select application";
+			btSearch.OnClick += new SensePanelButtonItem.ClickEventHandler(btSearch_Click);
+			this.senseListCtrl.AddItem(btSearch);
+			
+			// we are done so turn on UI updating
+			this.senseListCtrl.EndUpdate();
+			
+			setupSIP();
+		}
+
+		private void btSearch_Click(object sender)
 		{
 			DoSearch();
 		}

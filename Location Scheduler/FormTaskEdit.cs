@@ -8,11 +8,12 @@ using System.Windows.Forms;
 using StedySoft.SenseSDK;
 using StedySoft.SenseSDK.DrawingCE;
 using GMap.NET;
+using HelperLib;
 
 
 namespace Location_Scheduler
 {
-    public partial class FormTaskEdit : Form
+    public partial class FormTaskEdit : SenseListForm
     {
 
 		#region Declarations
@@ -33,7 +34,7 @@ namespace Location_Scheduler
 
 		#endregion
 
-        public FormTaskEdit()
+        public FormTaskEdit() : base()
         {
             InitializeComponent();
         }
@@ -142,10 +143,8 @@ namespace Location_Scheduler
 			// we are done so turn on UI updating
 			this.senseListCtrl.EndUpdate();
 
-			// enable Tap n' Hold & auto SIP for SensePanelTextboxItem(s)
-			SIP.Enable(this.senseListCtrl.Handle);
-			this.sip.EnabledChanged += new EventHandler(sip_EnabledChanged);
-        }
+			setupSIP();
+		}
 
 		private void menuItem1_Click(object sender, EventArgs e)
 		{
@@ -208,33 +207,9 @@ namespace Location_Scheduler
 			this.senseListCtrl.EndUpdate();
 		}
 
-		private int _sipOffset = 0;
-		void sip_EnabledChanged(object sender, EventArgs e)
+		private void menuItem2_Click(object sender, EventArgs e)
 		{
-			if (this.sip.Enabled)
-			{
-				SenseListControl.ISenseListItem IItem = this.senseListCtrl.FocusedItem;
-				System.Drawing.Rectangle r = IItem.ClientRectangle;
-				r.Offset(0, this.senseListCtrl.Bounds.Top);
-				if (IItem is SensePanelTextboxItem)
-				{
-					if (r.Bottom > this.sip.VisibleDesktop.Height)
-					{
-						this._sipOffset = Math.Abs(this.sip.VisibleDesktop.Height - r.Bottom);
-						this.senseListCtrl.ScrollList(-this._sipOffset);
-						this.senseListCtrl.Invalidate();
-					}
-				}
-			}
-			else
-			{
-				if (!this._sipOffset.Equals(0))
-				{
-					this.senseListCtrl.ScrollList(this._sipOffset);
-					this.senseListCtrl.Invalidate();
-				}
-				this._sipOffset = 0;
-			}
+			Close();
 		}
 	}
 }

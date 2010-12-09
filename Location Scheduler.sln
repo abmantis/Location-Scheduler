@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Location Scheduler", "Location Scheduler\Location Scheduler.csproj", "{E8F6C567-6602-49B7-B97C-9FB9F0D1CCCC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperLib", "HelperLib\HelperLib.csproj", "{35208667-FD6D-4B37-9566-AAEFE580E872}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{E8F6C567-6602-49B7-B97C-9FB9F0D1CCCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8F6C567-6602-49B7-B97C-9FB9F0D1CCCC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8F6C567-6602-49B7-B97C-9FB9F0D1CCCC}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{35208667-FD6D-4B37-9566-AAEFE580E872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35208667-FD6D-4B37-9566-AAEFE580E872}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35208667-FD6D-4B37-9566-AAEFE580E872}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35208667-FD6D-4B37-9566-AAEFE580E872}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

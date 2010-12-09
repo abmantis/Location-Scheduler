@@ -63,6 +63,7 @@ namespace Location_Scheduler
 			}
 			else
 			{
+				// Após carregar em cancelar entra aqui mesmo que já tenha escolhido uma pos! :S
 				this.map.CurrentPosition = startPos;
 				centerCross = new GMapMarkerCross(this.map.CurrentPosition);				
 			}
@@ -115,6 +116,7 @@ namespace Location_Scheduler
 		private void menuItemCancel_Click(object sender, EventArgs e)
 		{
 			isPosSelected = false;
+			Close();
 		}
 
 	}
