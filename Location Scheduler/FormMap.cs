@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
+using HelperLib;
 
 namespace Location_Scheduler
 {
@@ -104,7 +105,7 @@ namespace Location_Scheduler
 		private void btSearch_Click(object sender, EventArgs e)
 		{
 			FormMapSearch frmSearch = new FormMapSearch(this.map);
-			frmSearch.ShowDialog();
+			Globals.ShowDialog(frmSearch, this);
 		}
 		
 		private void menuItemSelect_Click(object sender, EventArgs e)

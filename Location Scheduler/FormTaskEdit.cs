@@ -157,7 +157,7 @@ namespace Location_Scheduler
 			{
 				frmMap = new FormMap();
 			}
-			frmMap.ShowDialog();
+			Globals.ShowDialog(frmMap, this);
 			if (frmMap.IsPosSelected)
 			{				
 				Placemark place = GMaps.Instance.GetPlacemarkFromGeocoder(frmMap.CenterCross.Position);

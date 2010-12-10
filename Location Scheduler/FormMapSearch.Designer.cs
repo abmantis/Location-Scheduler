@@ -45,7 +45,7 @@
 			this.ControlBox = false;
 			this.Menu = this.mainMenu1;
 			this.Name = "FormMapSearch";
-			this.Text = "Location Scheduler";
+			this.Text = StringTable.AppTittle;
 			this.Load += new System.EventHandler(this.FormMapSearch_Load);
 			this.ResumeLayout(false);
 

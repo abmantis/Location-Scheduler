@@ -33,6 +33,8 @@ namespace Location_Scheduler
 			fileToSaveTasks += "tasks.xml";
         }
 
+        #region Events
+
 		private void FormMain_Load(object sender, EventArgs e)
 		{
 			loadTasksFromFile();
@@ -47,7 +49,27 @@ namespace Location_Scheduler
 			
 		}
 
-		private void SetupControls()
+        private void menuItem1_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void btAdd_Click(object sender)
+        {
+            FormTaskEdit formTaskEdit = new FormTaskEdit();
+			Globals.ShowDialog(formTaskEdit, this);
+        }
+
+        #endregion
+
+        #region Functions
+
+		private void saveTasksToFile()
+		{			
+			ObjectXMLSerializer<List<Task>>.Save(taskArray, fileToSaveTasks);
+		}
+
+        private void SetupControls()
 		{
 			// turn off UI updating
 			this.senseListCtrl.BeginUpdate();
@@ -57,8 +79,7 @@ namespace Location_Scheduler
 			btnAddTask.LabelText = "";
 			btnAddTask.Text = "Add Task";
 			btnAddTask.OnClick += new SensePanelButtonItem.ClickEventHandler(btAdd_Click);
-			this.senseListCtrl.AddItem(btnAddTask);
-	
+			this.senseListCtrl.AddItem(btnAddTask);	
 
 			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTasks", "Tasks"));
 			
@@ -69,22 +90,6 @@ namespace Location_Scheduler
 			setupSIP();
 		}
 
-        private void menuItem1_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void btAdd_Click(object sender)
-        {
-            FormTaskEdit formTaskEdit = new FormTaskEdit();
-            formTaskEdit.ShowDialog();
-        }
-
-		private void saveTasksToFile()
-		{			
-			ObjectXMLSerializer<List<Task>>.Save(taskArray, fileToSaveTasks);
-		}
-
 		private void loadTasksFromFile()
 		{
 			try
@@ -92,10 +97,10 @@ namespace Location_Scheduler
 				taskArray = ObjectXMLSerializer<List<Task>>.Load(fileToSaveTasks);
 			}
 			catch (FileNotFoundException ex)
-			{
+			{                
 				taskArray = new List<Task>();
 			}			
 		}
-				
+        #endregion		
     }
 }

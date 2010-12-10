@@ -139,7 +139,7 @@
 			this.Controls.Add(this.senseHeaderCtrl);
 			this.Menu = this.mainMenu1;
 			this.Name = "FormMap";
-			this.Text = "Location Scheduler";
+			this.Text = StringTable.AppTittle;
 			this.Load += new System.EventHandler(this.FormMap_Load);
 			this.ResumeLayout(false);
 
