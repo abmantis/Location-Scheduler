@@ -10,13 +10,13 @@ namespace HelperLib
     {
         public static System.Windows.Forms.DialogResult ShowDialog(System.Windows.Forms.Form newForm, System.Windows.Forms.Form currentForm)
         {
-            string s = currentForm.Text;
+            string title = currentForm.Text;
             currentForm.Text = "";
-            System.Windows.Forms.DialogResult r = newForm.ShowDialog();
-            currentForm.Text = s;
+            System.Windows.Forms.DialogResult result = newForm.ShowDialog();
+            currentForm.Text = title;
             currentForm.Show();
             currentForm.BringToFront();
-            return r;
+            return result;
         }
     }
 }

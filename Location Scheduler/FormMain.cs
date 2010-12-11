@@ -10,6 +10,8 @@ using StedySoft.SenseSDK.DrawingCE;
 using HelperLib;
 using GMap.NET;
 using System.IO;
+using System.Globalization;
+using System.Threading;
 
 
 namespace Location_Scheduler
