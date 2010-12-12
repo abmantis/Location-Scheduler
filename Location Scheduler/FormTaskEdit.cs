@@ -17,160 +17,71 @@ namespace Location_Scheduler
     {
 
 		#region Declarations
-		enum ActionTypes { SMS = 0, NOTIFICATION = 1, APP = 2 };
 
-		private SensePanelButtonItem btnSetLocation = null;
-		private SensePanelButtonItem btnSelectApplication = null;
-		private SensePanelTextboxItem tboxSubject = null;
-		private SensePanelTextboxItem tboxNotes = null;
-		private SensePanelTextboxItem tboxSMSRecipient = null;
-		private SensePanelTextboxItem tboxSMSBody = null;
-		private SensePanelComboItem cbbActionType = null;
-		private SensePanelTimeItem timeMonitorStart = null;
-		private SensePanelTimeItem timeMonitorEnd = null;
-		private SensePanelItem txtLocation = null;
+		private SensePanelButtonItem mBtnSetLocation = null;
+		private SensePanelButtonItem mBtnSelectApplication = null;
+		private SensePanelTextboxItem mTboxSubject = null;
+		private SensePanelTextboxItem mTboxNotes = null;
+		private SensePanelTextboxItem mTboxSMSRecipient = null;
+		private SensePanelTextboxItem mTboxSMSBody = null;
+		private SensePanelComboItem mCbbActionType = null;
+		private SensePanelTimeItem mTimeMonitorStart = null;
+		private SensePanelTimeItem mTimeMonitorEnd = null;
+		private SensePanelItem mTxtLocation = null;
 
-		private FormMap frmMap = null;
-
+		Task mTask = new Task();
+		public HelperLib.Task Task
+		{
+			get { return mTask; }
+			set { mTask = value; }
+		}
 		#endregion
 
         public FormTaskEdit() : base()
         {
             InitializeComponent();
-        }
+			senseHeaderCtrl.Text = "Edit Task";
+		}
 
-        private void FormTaskEdit_Load(object sender, EventArgs e)
+		#region Events
+
+		private void FormTaskEdit_Load(object sender, EventArgs e)
         {
             SetupControls();
 
         }
-        private void SetupControls()
-        {
-            // turn off UI updating
-            this.senseListCtrl.BeginUpdate();
-			
-			// Subject textbox
-			tboxSubject = new SensePanelTextboxItem();
-			tboxSubject = new SensePanelTextboxItem("tboxSubject");
-			tboxSubject.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
-			tboxSubject.LabelText = "Subject:";
-			tboxSubject.Text = "";
-			this.senseListCtrl.AddItem(tboxSubject);
-
-			// location button            
-			btnSetLocation = new SensePanelButtonItem("btnSetLocation");
-			btnSetLocation.LabelText = "Location:";
-			btnSetLocation.Text = "Set Location";
-			btnSetLocation.OnClick += new SensePanelButtonItem.ClickEventHandler(OnBtnSetLocation);
-			this.senseListCtrl.AddItem(btnSetLocation);
-
-			// location label
-			txtLocation = new SensePanelItem("txtLocation");
-			txtLocation.PrimaryTextAlignment = SenseAPIs.SenseFont.PanelTextAlignment.Top;
-//			txtLocation.PrimaryTextLineHeight = SenseAPIs.SenseFont.PanelTextLineHeight.SingleLine;
-			txtLocation.Visible = false;
-			this.senseListCtrl.AddItem(txtLocation);
-
-			// Action type combobox
-			cbbActionType = new SensePanelComboItem("cbbActionType");
-			cbbActionType.OnSelectedIndexChanged += new SensePanelComboItem.SelectedIndexChangedEventHandler(OnCbbActionTypeSelectedIndexChanged);
-			this.senseListCtrl.AddItem(cbbActionType);			
-			cbbActionType.Items.Add(new SensePanelComboItem.Item("Show notification", ActionTypes.NOTIFICATION));
-			cbbActionType.Items.Add(new SensePanelComboItem.Item("Send SMS", ActionTypes.SMS));
-			cbbActionType.Items.Add(new SensePanelComboItem.Item("Launch application", ActionTypes.APP));
-			cbbActionType.LabelText = "Action type:";
-			cbbActionType.SelectedIndex = 0;
-
-			// SMS recipient textbox
-			tboxSMSRecipient = new SensePanelTextboxItem();
-			tboxSMSRecipient = new SensePanelTextboxItem("tboxSMSRecipient");
-			tboxSMSRecipient.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
-			tboxSMSRecipient.LabelText = "SMS Recipient:";
-			tboxSMSRecipient.Text = "";
-			tboxSMSRecipient.Visible = false;
-			this.senseListCtrl.AddItem(tboxSMSRecipient);
-
-			// SMS body textbox
-			tboxSMSBody = new SensePanelTextboxItem();
-			tboxSMSBody = new SensePanelTextboxItem("tboxSMSBody");
-			tboxSMSBody.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
-			tboxSMSBody.LabelText = "SMS Text:";
-			tboxSMSBody.Multiline = true;
-			tboxSMSBody.Height = 200;
-			tboxSMSBody.Text = "";
-			tboxSMSBody.Visible = false;
-			this.senseListCtrl.AddItem(tboxSMSBody);
-
-			// Select application button            
-			btnSelectApplication = new SensePanelButtonItem("btnSelectApplication");
-			btnSelectApplication.LabelText = "Application:";
-			btnSelectApplication.Text = "Select application";
-			btnSelectApplication.OnClick += new SensePanelButtonItem.ClickEventHandler(OnBtnSelectApplication);
-			btnSelectApplication.Visible = false;
-			this.senseListCtrl.AddItem(btnSelectApplication);
-
-
-			// monitoring period time start
-			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemMonitorPeriod", "Monitoring period"));
-			timeMonitorStart = new SensePanelTimeItem("timeMonitorStart");
-			timeMonitorStart.AutoShowDialog = true;
-			timeMonitorStart.ButtonAnimation = true;
-			timeMonitorStart.PrimaryText = "Start monitoring at";
-//			timeMonitorStart.SecondaryText = "Style set for auto dialog...";
-			timeMonitorStart.Time = new Time(DateTime.Now);
-			this.senseListCtrl.AddItem(timeMonitorStart);
-
-			// monitoring period time end
-			timeMonitorEnd = new SensePanelTimeItem("timeMonitorEnd");
-			timeMonitorEnd.AutoShowDialog = true;
-			timeMonitorEnd.ButtonAnimation = true;
-			timeMonitorEnd.PrimaryText = "End monitoring at";
-			timeMonitorEnd.Time = new Time(DateTime.Now);
-			this.senseListCtrl.AddItem(timeMonitorEnd);
-
-			// Notes textbox
-			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTaskNotes", "Task description"));
-			tboxNotes = new SensePanelTextboxItem();
-			tboxNotes = new SensePanelTextboxItem("tboxNotes");
-			tboxNotes.LayoutSytle = SenseTexboxLayoutStyle.Horizontal;
-			tboxNotes.LabelText = "";
-			tboxNotes.ShowSeparator = false;
-			tboxNotes.Multiline = true;
-			tboxNotes.Height = 200;
-			tboxNotes.Text = "";
-			this.senseListCtrl.AddItem(tboxNotes);
-
-			// we are done so turn on UI updating
-			this.senseListCtrl.EndUpdate();
-
-			setupSIP();
-		}
-
+        
 		private void menuItem1_Click(object sender, EventArgs e)
 		{
+			DialogToTaskClass();
+			this.DialogResult = DialogResult.OK;
+			Close();
+		}
+
+		private void menuItem2_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.Cancel;
 			Close();
 		}
 
 		void OnBtnSetLocation(object Sender)
 		{
-			if (frmMap == null)
+			FormMap frmMap = new FormMap();			
+			if (Globals.ShowDialog(frmMap, this) == DialogResult.OK)
 			{
-				frmMap = new FormMap();
-			}
-			Globals.ShowDialog(frmMap, this);
-			if (frmMap.IsPosSelected)
-			{				
-				Placemark place = GMaps.Instance.GetPlacemarkFromGeocoder(frmMap.CenterCross.Position);
+				mTask.LocationCoord = frmMap.CenterCross.Position;
+				Placemark place = GMaps.Instance.GetPlacemarkFromGeocoder(mTask.LocationCoord.Value);
 				if (place != null)
 				{
-					txtLocation.PrimaryText = place.Address;
+					mTask.LocationAddress = place.Address;
 				}
 				else
 				{
-					txtLocation.PrimaryText = frmMap.CenterCross.Position.ToString();
+					mTask.LocationAddress = frmMap.CenterCross.Position.ToString();
 				}
-				btnSetLocation.ShowSeparator = false;
-				txtLocation.Visible = true;
+				mTxtLocation.PrimaryText = mTask.LocationAddress;
+				mBtnSetLocation.ShowSeparator = false;
+				mTxtLocation.Visible = true;
 			}
 		}
 
@@ -182,23 +93,23 @@ namespace Location_Scheduler
 		void OnCbbActionTypeSelectedIndexChanged(object Sender, int Index)
 		{
 			this.senseListCtrl.BeginUpdate();
-			tboxSMSRecipient.Visible = false;
-			tboxSMSBody.Visible = false;
-			btnSelectApplication.Visible = false;
+			mTboxSMSRecipient.Visible = false;
+			mTboxSMSBody.Visible = false;
+			mBtnSelectApplication.Visible = false;
 
-			ActionTypes type = (ActionTypes)cbbActionType.Items[Index].Value;
+			Task.ActionTypes type = (Task.ActionTypes)mCbbActionType.Items[Index].Value;
 
 			switch (type)
 			{
-			case ActionTypes.SMS:
-				tboxSMSRecipient.Visible = true;
-				tboxSMSBody.Visible = true;
+			case Task.ActionTypes.SMS:
+				mTboxSMSRecipient.Visible = true;
+				mTboxSMSBody.Visible = true;
 				break;
-			case ActionTypes.NOTIFICATION:
+			case Task.ActionTypes.NOTIFICATION:
 
 			break;
-			case ActionTypes.APP:
-				btnSelectApplication.Visible = true;
+			case Task.ActionTypes.APP:
+				mBtnSelectApplication.Visible = true;
 				break;
 			default:
 			break;
@@ -207,9 +118,124 @@ namespace Location_Scheduler
 			this.senseListCtrl.EndUpdate();
 		}
 
-		private void menuItem2_Click(object sender, EventArgs e)
+		#endregion
+
+		#region Functions
+
+		private void SetupControls()
 		{
-			Close();
+			// turn off UI updating
+			this.senseListCtrl.BeginUpdate();
+
+			// Subject textbox
+			mTboxSubject = new SensePanelTextboxItem();
+			mTboxSubject = new SensePanelTextboxItem("mTboxSubject");
+			mTboxSubject.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
+			mTboxSubject.LabelText = "Subject:";
+			mTboxSubject.Text = "";
+			this.senseListCtrl.AddItem(mTboxSubject);
+
+			// location button            
+			mBtnSetLocation = new SensePanelButtonItem("mBtnSetLocation");
+			mBtnSetLocation.LabelText = "Location:";
+			mBtnSetLocation.Text = "Set Location";
+			mBtnSetLocation.OnClick += new SensePanelButtonItem.ClickEventHandler(OnBtnSetLocation);
+			this.senseListCtrl.AddItem(mBtnSetLocation);
+
+			// location label
+			mTxtLocation = new SensePanelItem("mTxtLocation");
+			mTxtLocation.PrimaryTextAlignment = SenseAPIs.SenseFont.PanelTextAlignment.Top;
+			//			mTxtLocation.PrimaryTextLineHeight = SenseAPIs.SenseFont.PanelTextLineHeight.SingleLine;
+			mTxtLocation.Visible = false;
+			this.senseListCtrl.AddItem(mTxtLocation);
+
+			// Action type combobox
+			mCbbActionType = new SensePanelComboItem("mCbbActionType");
+			mCbbActionType.OnSelectedIndexChanged += new SensePanelComboItem.SelectedIndexChangedEventHandler(OnCbbActionTypeSelectedIndexChanged);
+			this.senseListCtrl.AddItem(mCbbActionType);
+			mCbbActionType.Items.Add(new SensePanelComboItem.Item("Show notification", Task.ActionTypes.NOTIFICATION));
+			mCbbActionType.Items.Add(new SensePanelComboItem.Item("Send SMS", Task.ActionTypes.SMS));
+			mCbbActionType.Items.Add(new SensePanelComboItem.Item("Launch application", Task.ActionTypes.APP));
+			mCbbActionType.LabelText = "Action type:";
+			mCbbActionType.SelectedIndex = 0;
+
+			// SMS recipient textbox
+			mTboxSMSRecipient = new SensePanelTextboxItem();
+			mTboxSMSRecipient = new SensePanelTextboxItem("mTboxSMSRecipient");
+			mTboxSMSRecipient.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
+			mTboxSMSRecipient.LabelText = "SMS Recipient:";
+			mTboxSMSRecipient.Text = "";
+			mTboxSMSRecipient.Visible = false;
+			this.senseListCtrl.AddItem(mTboxSMSRecipient);
+
+			// SMS body textbox
+			mTboxSMSBody = new SensePanelTextboxItem();
+			mTboxSMSBody = new SensePanelTextboxItem("mTboxSMSBody");
+			mTboxSMSBody.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
+			mTboxSMSBody.LabelText = "SMS Text:";
+			mTboxSMSBody.Multiline = true;
+			mTboxSMSBody.Height = 200;
+			mTboxSMSBody.Text = "";
+			mTboxSMSBody.Visible = false;
+			this.senseListCtrl.AddItem(mTboxSMSBody);
+
+			// Select application button            
+			mBtnSelectApplication = new SensePanelButtonItem("mBtnSelectApplication");
+			mBtnSelectApplication.LabelText = "Application:";
+			mBtnSelectApplication.Text = "Select application";
+			mBtnSelectApplication.OnClick += new SensePanelButtonItem.ClickEventHandler(OnBtnSelectApplication);
+			mBtnSelectApplication.Visible = false;
+			this.senseListCtrl.AddItem(mBtnSelectApplication);
+
+
+			// monitoring period time start
+			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemMonitorPeriod", "Monitoring period"));
+			mTimeMonitorStart = new SensePanelTimeItem("mTimeMonitorStart");
+			mTimeMonitorStart.AutoShowDialog = true;
+			mTimeMonitorStart.ButtonAnimation = true;
+			mTimeMonitorStart.PrimaryText = "Start monitoring at";
+			//			mTimeMonitorStart.SecondaryText = "Style set for auto dialog...";
+			mTimeMonitorStart.Time = new Time(DateTime.Now);
+			this.senseListCtrl.AddItem(mTimeMonitorStart);
+
+			// monitoring period time end
+			mTimeMonitorEnd = new SensePanelTimeItem("mTimeMonitorEnd");
+			mTimeMonitorEnd.AutoShowDialog = true;
+			mTimeMonitorEnd.ButtonAnimation = true;
+			mTimeMonitorEnd.PrimaryText = "End monitoring at";
+			mTimeMonitorEnd.Time = new Time(DateTime.Now);
+			this.senseListCtrl.AddItem(mTimeMonitorEnd);
+
+			// Notes textbox
+			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTaskNotes", "Task description"));
+			mTboxNotes = new SensePanelTextboxItem();
+			mTboxNotes = new SensePanelTextboxItem("mTboxNotes");
+			mTboxNotes.LayoutSytle = SenseTexboxLayoutStyle.Horizontal;
+			mTboxNotes.LabelText = "";
+			mTboxNotes.ShowSeparator = false;
+			mTboxNotes.Multiline = true;
+			mTboxNotes.Height = 200;
+			mTboxNotes.Text = "";
+			this.senseListCtrl.AddItem(mTboxNotes);
+
+			// we are done so turn on UI updating
+			this.senseListCtrl.EndUpdate();
+
+			setupSIP();
 		}
+
+		private void DialogToTaskClass()
+		{
+			mTask.ActionType = (Task.ActionTypes)mCbbActionType.SelectedItem.Value;
+			mTask.MonitorEndTime = mTimeMonitorEnd.Time;
+			mTask.MonitorStartTime = mTimeMonitorStart.Time;
+			mTask.Notes	= mTboxNotes.Text;
+			mTask.SmsBody = mTboxSMSBody.Text;
+			mTask.SmsRecipient = mTboxSMSRecipient.Text;
+			mTask.Subject = mTboxSubject.Text;
+		}
+
+		#endregion
+
 	}
 }

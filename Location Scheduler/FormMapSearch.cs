@@ -14,13 +14,17 @@ namespace Location_Scheduler
 {
 	public partial class FormMapSearch : SenseListForm
 	{
-		GMap.NET.WindowsForms.GMapControl map;
 		private SensePanelTextboxItem tboxAddress = null;
 		private SensePanelButtonItem btSearch = null;
-		public FormMapSearch(GMap.NET.WindowsForms.GMapControl map) : base()
+		private PointLatLng? pos = null;
+		public PointLatLng Pos
+		{
+			get { return pos.Value; }
+		}
+		public FormMapSearch() : base()
 		{
 			InitializeComponent();
-			this.map = map;
+			senseHeaderCtrl.Text = "Search Location";
 		}
 
 		private void FormMapSearch_Load(object sender, EventArgs e)
@@ -42,8 +46,8 @@ namespace Location_Scheduler
 
 			// Search button            
 			btSearch = new SensePanelButtonItem("btSearch");
-			btSearch.LabelText = "Application:";
-			btSearch.Text = "Select application";
+			btSearch.LabelText = "";
+			btSearch.Text = "Search";
 			btSearch.OnClick += new SensePanelButtonItem.ClickEventHandler(btSearch_Click);
 			this.senseListCtrl.AddItem(btSearch);
 			
@@ -65,6 +69,7 @@ namespace Location_Scheduler
 
 		private void menuItem2_Click(object sender, EventArgs e)
 		{
+			this.DialogResult = DialogResult.Cancel;
 			Close();
 		}
 
@@ -73,11 +78,10 @@ namespace Location_Scheduler
 			try
 			{
 				GeoCoderStatusCode status = GeoCoderStatusCode.Unknow;
-				PointLatLng? pos = GMaps.Instance.GetLatLngFromGeocoder(tboxAddress.Text, out status);
+				pos = GMaps.Instance.GetLatLngFromGeocoder(tboxAddress.Text, out status);
 				if (pos != null && status == GeoCoderStatusCode.G_GEO_SUCCESS)
-				{
-					map.CurrentPosition = pos.Value;
-					map.Zoom = 12;
+				{					
+					this.DialogResult = DialogResult.OK;
 					Close();
 				}
 				else

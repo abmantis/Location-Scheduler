@@ -103,7 +103,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="StringTable.pt-PT.resx" />
     <EmbeddedResource Include="StringTable.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>StringTable.Designer.cs</LastGenOutput>

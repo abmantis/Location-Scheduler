@@ -30,17 +30,20 @@ namespace HelperLib
 			if (this.sip.Enabled)
 			{
 				SenseListControl.ISenseListItem IItem = this.senseListCtrl.FocusedItem;
-				System.Drawing.Rectangle r = IItem.ClientRectangle;
-				r.Offset(0, this.senseListCtrl.Bounds.Top);
-				if (IItem is SensePanelTextboxItem)
+				if (IItem != null)
 				{
-					if (r.Bottom > this.sip.VisibleDesktop.Height)
+					System.Drawing.Rectangle r = IItem.ClientRectangle;
+					r.Offset(0, this.senseListCtrl.Bounds.Top);
+					if (IItem is SensePanelTextboxItem)
 					{
-						this._sipOffset = Math.Abs(this.sip.VisibleDesktop.Height - r.Bottom);
-						this.senseListCtrl.ScrollList(-this._sipOffset);
-						this.senseListCtrl.Invalidate();
+						if (r.Bottom > this.sip.VisibleDesktop.Height)
+						{
+							this._sipOffset = Math.Abs(this.sip.VisibleDesktop.Height - r.Bottom);
+							this.senseListCtrl.ScrollList(-this._sipOffset);
+							this.senseListCtrl.Invalidate();
+						}
 					}
-				}
+				}				
 			}
 			else
 			{

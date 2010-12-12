@@ -20,35 +20,29 @@ namespace Location_Scheduler
 	{
 		#region Declarations
 
-		List<Task> taskArray = null;
-		String fileToSaveTasks = null;
+		int mTaskCounter = 0;
+		List<Task> mTaskArray = null;
+		String mFileToSaveTasks = null;
 		
-		SensePanelButtonItem btnAddTask = null;
+		SensePanelButtonItem mBtnAddTask = null;
 
 		#endregion
 
 		public FormMain()
         {
-            InitializeComponent();			
+            InitializeComponent();
+			senseHeaderCtrl.Text = StringTable.AppTittle;
 
-			fileToSaveTasks = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-			fileToSaveTasks += "tasks.xml";
+			mFileToSaveTasks = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+			mFileToSaveTasks += "\\tasks.xml";
         }
 
         #region Events
 
 		private void FormMain_Load(object sender, EventArgs e)
-		{
-			loadTasksFromFile();
+		{			
 			SetupControls();
-// 			Task t = new Task();
-// 			t.Subject = "Notifica-me";
-// 			t.Notes = "Não te esqueças de notificar. ta?";
-// 			t.LocationAddress = "Uma rua qualquer por ali";
-// 			t.LocationCoord = new PointLatLng(0.123, 0.456);
-// 			t.ActionType = Task.ActionTypes.NOTIFICATION;
-// 			taskArray.Add(t);			
-			
+			LoadTasksFromFile();
 		}
 
         private void menuItem1_Click(object sender, EventArgs e)
@@ -59,17 +53,15 @@ namespace Location_Scheduler
         private void btAdd_Click(object sender)
         {
             FormTaskEdit formTaskEdit = new FormTaskEdit();
-			Globals.ShowDialog(formTaskEdit, this);
+			if (Globals.ShowDialog(formTaskEdit, this) == DialogResult.OK)
+			{
+				AddTask(formTaskEdit.Task);
+			}
         }
 
         #endregion
 
         #region Functions
-
-		private void saveTasksToFile()
-		{			
-			ObjectXMLSerializer<List<Task>>.Save(taskArray, fileToSaveTasks);
-		}
 
         private void SetupControls()
 		{
@@ -77,11 +69,11 @@ namespace Location_Scheduler
 			this.senseListCtrl.BeginUpdate();
 
 			// location button            
-			btnAddTask = new SensePanelButtonItem("btnAddTask");
-			btnAddTask.LabelText = "";
-			btnAddTask.Text = "Add Task";
-			btnAddTask.OnClick += new SensePanelButtonItem.ClickEventHandler(btAdd_Click);
-			this.senseListCtrl.AddItem(btnAddTask);	
+			mBtnAddTask = new SensePanelButtonItem("mBtnAddTask");
+			mBtnAddTask.LabelText = "";
+			mBtnAddTask.Text = "Add Task";
+			mBtnAddTask.OnClick += new SensePanelButtonItem.ClickEventHandler(btAdd_Click);
+			this.senseListCtrl.AddItem(mBtnAddTask);	
 
 			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTasks", "Tasks"));
 			
@@ -92,15 +84,64 @@ namespace Location_Scheduler
 			setupSIP();
 		}
 
-		private void loadTasksFromFile()
+		private void AddTask(Task task)
+		{
+			mTaskCounter++;
+			task.InternalIdentifier = mTaskCounter;
+			AddPanelItemForTask(task);
+
+			mTaskArray.Add(task);
+			SaveTasksToFile();
+		}
+
+		private void AddPanelItemForTask(Task task)
+		{
+			SensePanelItem panelIt = new SensePanelItem("panelTask_" + task.InternalIdentifier);
+			panelIt.Tag = task.InternalIdentifier;
+			panelIt.PrimaryTextAlignment = SenseAPIs.SenseFont.PanelTextAlignment.Top;
+			panelIt.PrimaryText = task.Subject;
+			//			panelIt.PrimaryTextLineHeight = SenseAPIs.SenseFont.PanelTextLineHeight.SingleLine;
+			this.senseListCtrl.AddItem(panelIt);
+		}
+
+		private void SaveTasksToFile()
+		{
+			ObjectXMLSerializer<List<Task>>.Save(mTaskArray, mFileToSaveTasks);
+		}
+
+		private void LoadTasksFromFile()
 		{
 			try
 			{
-				taskArray = ObjectXMLSerializer<List<Task>>.Load(fileToSaveTasks);
+				mTaskArray = ObjectXMLSerializer<List<Task>>.Load(mFileToSaveTasks);
+				String s ="";
+				foreach (Task task in mTaskArray)
+				{					
+					s += task.InternalIdentifier + ";";
+				}
+				MessageBox.Show(s);
+
+				// Set internal identifiers and add panel items for each task
+				foreach (Task task in mTaskArray)
+				{
+					mTaskCounter++;
+					task.InternalIdentifier = mTaskCounter;
+					AddPanelItemForTask(task);
+				}
+
+				s = "";
+				foreach (Task task in mTaskArray)
+				{
+					s += task.InternalIdentifier + ";";
+				}
+				MessageBox.Show(s);
+				
 			}
+#pragma warning disable 0168
 			catch (FileNotFoundException ex)
-			{                
-				taskArray = new List<Task>();
+#pragma warning restore 0168
+			{
+				mTaskArray = new List<Task>();
 			}			
 		}
         #endregion		

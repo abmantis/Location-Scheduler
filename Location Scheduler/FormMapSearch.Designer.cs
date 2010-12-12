@@ -17,8 +17,6 @@
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 
-			this.senseHeaderCtrl.Text = "Search";
-
 			// 
 			// mainMenu1
 			// 

@@ -19,17 +19,11 @@ namespace Location_Scheduler
 		private GMapOverlay overlay;
 		private PointLatLng startPos = new PointLatLng(41.1780080, -8.6087320);
 
-		private GMapMarkerCross centerCross;
+		private GMapMarkerCross centerCross = null;
 		public GMapMarkerCross CenterCross
 		{
 			get { return centerCross; }
-			set { centerCross = value; isPosSelected = true; }
-		}
-
-		private bool isPosSelected = false;
-		public bool IsPosSelected
-		{
-			get { return isPosSelected; }
+			set { centerCross = value; }
 		}
 		
 		#endregion
@@ -37,8 +31,9 @@ namespace Location_Scheduler
 		public FormMap()
 		{
 			InitializeComponent();
-
 		}
+
+		#region Events
 
 		private void FormMap_Load(object sender, EventArgs e)
 		{
@@ -58,7 +53,7 @@ namespace Location_Scheduler
 			this.map.Overlays.Add(overlay);
 
 
-			if (isPosSelected)
+			if (centerCross != null)
 			{
 				this.map.CurrentPosition = CenterCross.Position;
 			}
@@ -104,21 +99,27 @@ namespace Location_Scheduler
 
 		private void btSearch_Click(object sender, EventArgs e)
 		{
-			FormMapSearch frmSearch = new FormMapSearch(this.map);
-			Globals.ShowDialog(frmSearch, this);
+			FormMapSearch frmSearch = new FormMapSearch();
+			if (Globals.ShowDialog(frmSearch, this) == DialogResult.OK)
+			{
+				map.CurrentPosition = frmSearch.Pos;
+				map.Zoom = 14;
+			}		
 		}
 		
 		private void menuItemSelect_Click(object sender, EventArgs e)
 		{
-			isPosSelected = true;
+			this.DialogResult = DialogResult.OK;
 			Close();
 		}
 
 		private void menuItemCancel_Click(object sender, EventArgs e)
 		{
-			isPosSelected = false;
+			this.DialogResult = DialogResult.Cancel;
 			Close();
 		}
+
+		#endregion
 
 	}
 }
