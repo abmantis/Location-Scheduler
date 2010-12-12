@@ -18,12 +18,15 @@ namespace Location_Scheduler
 
 		private GMapOverlay overlay;
 		private PointLatLng startPos = new PointLatLng(41.1780080, -8.6087320);
-
+		public GMap.NET.PointLatLng StartPos
+		{
+			get { return startPos; }
+			set { startPos = value; }
+		}
 		private GMapMarkerCross centerCross = null;
 		public GMapMarkerCross CenterCross
 		{
 			get { return centerCross; }
-			set { centerCross = value; }
 		}
 		
 		#endregion
@@ -52,19 +55,10 @@ namespace Location_Scheduler
 			overlay = new GMapOverlay(this.map, "overlay");
 			this.map.Overlays.Add(overlay);
 
+			this.map.CurrentPosition = startPos;
+			centerCross = new GMapMarkerCross(this.map.CurrentPosition);			
 
-			if (centerCross != null)
-			{
-				this.map.CurrentPosition = CenterCross.Position;
-			}
-			else
-			{
-				// Após carregar em cancelar entra aqui mesmo que já tenha escolhido uma pos! :S
-				this.map.CurrentPosition = startPos;
-				centerCross = new GMapMarkerCross(this.map.CurrentPosition);				
-			}
-
-			// Center cross			
+			// Add Center cross			
 			overlay.Markers.Add(centerCross);
 		}
 

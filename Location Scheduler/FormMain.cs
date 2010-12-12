@@ -59,6 +59,17 @@ namespace Location_Scheduler
 			}
         }
 
+		void taskList_Click(object Sender)
+		{
+			SensePanelItem panelIt = (SensePanelItem)Sender;
+			Task task = mTaskArray.Find(delegate(Task p) { return p.InternalIdentifier == (int)panelIt.Tag; });
+			FormTaskEdit frmtaskedit = new FormTaskEdit(task);
+			if (Globals.ShowDialog(frmtaskedit, this) == DialogResult.OK)
+			{
+				panelIt.PrimaryText = task.Subject;
+			}
+		}
+
         #endregion
 
         #region Functions
@@ -101,6 +112,7 @@ namespace Location_Scheduler
 			panelIt.PrimaryTextAlignment = SenseAPIs.SenseFont.PanelTextAlignment.Top;
 			panelIt.PrimaryText = task.Subject;
 			//			panelIt.PrimaryTextLineHeight = SenseAPIs.SenseFont.PanelTextLineHeight.SingleLine;
+			panelIt.OnClick += new SensePanelItem.ClickEventHandler(taskList_Click);
 			this.senseListCtrl.AddItem(panelIt);
 		}
 

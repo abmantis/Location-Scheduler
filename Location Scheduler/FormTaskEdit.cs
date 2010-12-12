@@ -28,12 +28,12 @@ namespace Location_Scheduler
 		private SensePanelTimeItem mTimeMonitorStart = null;
 		private SensePanelTimeItem mTimeMonitorEnd = null;
 		private SensePanelItem mTxtLocation = null;
+		private bool mEditMode = false;
 
-		Task mTask = new Task();
+		private Task mTask = new Task();
 		public HelperLib.Task Task
 		{
 			get { return mTask; }
-			set { mTask = value; }
 		}
 		#endregion
 
@@ -43,12 +43,21 @@ namespace Location_Scheduler
 			senseHeaderCtrl.Text = "Edit Task";
 		}
 
+		public FormTaskEdit(Task task) : this()
+		{
+			mEditMode = true;
+			mTask = task;
+		}
+
 		#region Events
 
 		private void FormTaskEdit_Load(object sender, EventArgs e)
         {
             SetupControls();
-
+			if (mEditMode)
+			{
+				TaskClassToDialog();
+			}
         }
         
 		private void menuItem1_Click(object sender, EventArgs e)
@@ -66,7 +75,11 @@ namespace Location_Scheduler
 
 		void OnBtnSetLocation(object Sender)
 		{
-			FormMap frmMap = new FormMap();			
+			FormMap frmMap = new FormMap();
+			if (mTask.LocationCoord.HasValue)
+			{
+				frmMap.StartPos = mTask.LocationCoord.Value;
+			}
 			if (Globals.ShowDialog(frmMap, this) == DialogResult.OK)
 			{
 				mTask.LocationCoord = frmMap.CenterCross.Position;
@@ -79,9 +92,7 @@ namespace Location_Scheduler
 				{
 					mTask.LocationAddress = frmMap.CenterCross.Position.ToString();
 				}
-				mTxtLocation.PrimaryText = mTask.LocationAddress;
-				mBtnSetLocation.ShowSeparator = false;
-				mTxtLocation.Visible = true;
+				SetLocationAddress(mTask.LocationAddress);
 			}
 		}
 
@@ -91,31 +102,8 @@ namespace Location_Scheduler
 		}
 				
 		void OnCbbActionTypeSelectedIndexChanged(object Sender, int Index)
-		{
-			this.senseListCtrl.BeginUpdate();
-			mTboxSMSRecipient.Visible = false;
-			mTboxSMSBody.Visible = false;
-			mBtnSelectApplication.Visible = false;
-
-			Task.ActionTypes type = (Task.ActionTypes)mCbbActionType.Items[Index].Value;
-
-			switch (type)
-			{
-			case Task.ActionTypes.SMS:
-				mTboxSMSRecipient.Visible = true;
-				mTboxSMSBody.Visible = true;
-				break;
-			case Task.ActionTypes.NOTIFICATION:
-
-			break;
-			case Task.ActionTypes.APP:
-				mBtnSelectApplication.Visible = true;
-				break;
-			default:
-			break;
-			}
-
-			this.senseListCtrl.EndUpdate();
+		{			
+			ProcessCbbType();		
 		}
 
 		#endregion
@@ -207,7 +195,7 @@ namespace Location_Scheduler
 			this.senseListCtrl.AddItem(mTimeMonitorEnd);
 
 			// Notes textbox
-			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTaskNotes", "Task description"));
+			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTaskNotes", "Notes"));
 			mTboxNotes = new SensePanelTextboxItem();
 			mTboxNotes = new SensePanelTextboxItem("mTboxNotes");
 			mTboxNotes.LayoutSytle = SenseTexboxLayoutStyle.Horizontal;
@@ -229,10 +217,60 @@ namespace Location_Scheduler
 			mTask.ActionType = (Task.ActionTypes)mCbbActionType.SelectedItem.Value;
 			mTask.MonitorEndTime = mTimeMonitorEnd.Time;
 			mTask.MonitorStartTime = mTimeMonitorStart.Time;
-			mTask.Notes	= mTboxNotes.Text;
+			mTask.Notes = mTboxNotes.Text;
 			mTask.SmsBody = mTboxSMSBody.Text;
 			mTask.SmsRecipient = mTboxSMSRecipient.Text;
 			mTask.Subject = mTboxSubject.Text;
+		}
+
+		private void TaskClassToDialog()
+		{
+			mCbbActionType.SelectedValue = mTask.ActionType;			
+			SetLocationAddress(mTask.LocationAddress);
+			mTimeMonitorEnd.Time = mTask.MonitorEndTime;
+			mTimeMonitorStart.Time = mTask.MonitorStartTime;
+			mTboxNotes.Text = mTask.Notes;
+			mTboxSMSBody.Text = mTask.SmsBody;
+			mTboxSMSRecipient.Text = mTask.SmsRecipient;
+			mTboxSubject.Text = mTask.Subject;
+
+			ProcessCbbType();
+		}
+
+		private void SetLocationAddress(String address)
+		{
+			mTxtLocation.PrimaryText = address;
+			mBtnSetLocation.ShowSeparator = false;
+			mTxtLocation.Visible = true;
+		}
+
+		private void ProcessCbbType()
+		{
+			this.senseListCtrl.BeginUpdate();
+			mTboxSMSRecipient.Visible = false;
+			mTboxSMSBody.Visible = false;
+			mBtnSelectApplication.Visible = false;
+
+			Task.ActionTypes type = (Task.ActionTypes)mCbbActionType.SelectedValue;
+
+			switch (type)
+			{
+				case Task.ActionTypes.SMS:
+					mTboxSMSRecipient.Visible = true;
+					mTboxSMSBody.Visible = true;
+					break;
+				case Task.ActionTypes.NOTIFICATION:
+
+					break;
+				case Task.ActionTypes.APP:
+					mBtnSelectApplication.Visible = true;
+					break;
+				default:
+					break;
+			}
+
+			this.senseListCtrl.EndUpdate();
+
 		}
 
 		#endregion
