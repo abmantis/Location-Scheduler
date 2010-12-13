@@ -40,7 +40,7 @@ namespace Location_Scheduler
 			tboxAddress.LabelText = "Address:";
 			tboxAddress.ShowSeparator = false;
 			tboxAddress.Multiline = true;
-			tboxAddress.Height = 200;
+			tboxAddress.Height = GetLongTextBoxSize();
 			tboxAddress.Text = "";
 			this.senseListCtrl.AddItem(tboxAddress);
 

@@ -11,6 +11,7 @@ namespace HelperLib
 	[Serializable]
 	public class Task
 	{
+		#region Declarations
 		public enum ActionTypes { NULL = 0, SMS = 1, NOTIFICATION = 2, APP = 3 };
 		
 		private int internalIdentifier = 0;
@@ -27,9 +28,13 @@ namespace HelperLib
 		private String smsRecipient = null;
 		private String smsBody = null;
 
+		#endregion
+
 		public Task()
 		{
 		}
+
+		#region Properties 
 
 		[XmlIgnore]
 		public int InternalIdentifier
@@ -85,7 +90,6 @@ namespace HelperLib
 			}
 		}
 
-
 		[XmlIgnore]
 		public StedySoft.SenseSDK.Time MonitorStartTime
 		{
@@ -123,7 +127,55 @@ namespace HelperLib
 			get { return smsBody; }
 			set { smsBody = value; }
 		}
-		
-		
+
+		#endregion
+
+		#region Functions
+
+		public bool Validate(out String message)
+		{
+			if (subject.Trim().Length == 0)
+			{
+				message = "The Subject field is empty";
+				return false;
+			}
+
+			if (locationCoord.HasValue != true)
+			{
+				message = "You have to specify a location";
+				return false;
+			}
+			
+			switch (actionType)
+			{
+				case ActionTypes.APP:
+					if(application.Trim().Length == 0)
+					{
+						message = "You have to select an application";
+						return false;
+					}
+					break;
+				case ActionTypes.SMS:
+					if (smsRecipient.Trim().Length == 0)
+					{
+						message = "The SMS Subject is not specified";
+						return false;
+					}
+					break;
+			}
+
+			if( monitorStartTime.Hour > monitorEndTime.Hour ||
+				(monitorStartTime.Hour == monitorEndTime.Hour && monitorStartTime.Minute >= monitorEndTime.Minute))
+			{
+				message = "The monitor period is invalid";
+				return false;
+			}
+
+			message = "";
+			return true;
+		}
+
+		#endregion
+
 	}
 }

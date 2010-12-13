@@ -63,6 +63,12 @@ namespace Location_Scheduler
 		private void menuItem1_Click(object sender, EventArgs e)
 		{
 			DialogToTaskClass();
+			String errorMsg = "";
+			if (mTask.Validate(out errorMsg) == false)
+			{
+				SenseAPIs.SenseMessageBox.Show(errorMsg, "Invalid fields", SenseMessageBoxButtons.OK);
+				return;
+			}
 			this.DialogResult = DialogResult.OK;
 			Close();
 		}
@@ -162,7 +168,7 @@ namespace Location_Scheduler
 			mTboxSMSBody.LayoutSytle = SenseTexboxLayoutStyle.Vertical;
 			mTboxSMSBody.LabelText = "SMS Text:";
 			mTboxSMSBody.Multiline = true;
-			mTboxSMSBody.Height = 200;
+			mTboxSMSBody.Height = GetLongTextBoxSize();
 			mTboxSMSBody.Text = "";
 			mTboxSMSBody.Visible = false;
 			this.senseListCtrl.AddItem(mTboxSMSBody);
@@ -202,7 +208,7 @@ namespace Location_Scheduler
 			mTboxNotes.LabelText = "";
 			mTboxNotes.ShowSeparator = false;
 			mTboxNotes.Multiline = true;
-			mTboxNotes.Height = 200;
+			mTboxNotes.Height = GetLongTextBoxSize();
 			mTboxNotes.Text = "";
 			this.senseListCtrl.AddItem(mTboxNotes);
 
@@ -240,8 +246,11 @@ namespace Location_Scheduler
 		private void SetLocationAddress(String address)
 		{
 			mTxtLocation.PrimaryText = address;
-			mBtnSetLocation.ShowSeparator = false;
-			mTxtLocation.Visible = true;
+			if (address.Trim().Length > 0)
+			{
+				mBtnSetLocation.ShowSeparator = false;
+				mTxtLocation.Visible = true;
+			}			
 		}
 
 		private void ProcessCbbType()

@@ -55,5 +55,9 @@ namespace HelperLib
 				this._sipOffset = 0;
 			}
 		}
+		protected int GetLongTextBoxSize()
+		{
+			return (30 * this.Height) / 100;
+		}
 	}
 }
