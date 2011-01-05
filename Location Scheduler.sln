@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Location Scheduler", "Locat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperLib", "HelperLib\HelperLib.csproj", "{35208667-FD6D-4B37-9566-AAEFE580E872}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{C7238006-FB52-4649-BAD2-C2A05B6BB5A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,12 @@ Global
 		{35208667-FD6D-4B37-9566-AAEFE580E872}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35208667-FD6D-4B37-9566-AAEFE580E872}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35208667-FD6D-4B37-9566-AAEFE580E872}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7238006-FB52-4649-BAD2-C2A05B6BB5A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7238006-FB52-4649-BAD2-C2A05B6BB5A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7238006-FB52-4649-BAD2-C2A05B6BB5A8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C7238006-FB52-4649-BAD2-C2A05B6BB5A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7238006-FB52-4649-BAD2-C2A05B6BB5A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7238006-FB52-4649-BAD2-C2A05B6BB5A8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
