@@ -51,6 +51,14 @@
     </Reference>
     <Reference Include="Microsoft.Windowsce.Forms" />
     <Reference Include="mscorlib" />
+    <Reference Include="OpenNETCF, Version=2.3.0.39, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refs\OpenNETCF.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenNETCF.Configuration, Version=2.3.0.39, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refs\OpenNETCF.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="SenseSDK.Resources.QVGA, Version=1.38.3809.23995, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Refs\SenseSDK.Resources.QVGA.dll</HintPath>

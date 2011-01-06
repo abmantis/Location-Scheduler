@@ -20,6 +20,11 @@ namespace HelperLib
             return result;
         }
 
+		public static String GetCurrentPath()
+		{
+			return System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+		}
+
 		public static void WriteToDebugFile(string text)
 		{
 			StreamWriter SW;
@@ -30,7 +35,8 @@ namespace HelperLib
     }
 
 	public static class NotifMessages
-	{		
-		public const string NOTIF_SCAN = "1";
+	{
+		public const string NOTIF_STOP = "1";
+		public const string NOTIF_SCAN = "2";
 	}
 }

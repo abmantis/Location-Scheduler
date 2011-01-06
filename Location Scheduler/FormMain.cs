@@ -14,6 +14,8 @@ using System.Globalization;
 using System.Threading;
 using Microsoft.WindowsCE.Forms;
 using System.Runtime.InteropServices;
+using OpenNETCF.Threading;
+using System.Diagnostics;
 
 
 
@@ -52,6 +54,28 @@ namespace Location_Scheduler
 			_MsgQueueMgr.Shutdown();
             Application.Exit();
         }
+
+		private void menuItemStartDaemon_Click(object sender, EventArgs e)
+		{
+			StartDaemon();
+		}
+
+		private void menuItemStopDaemon_Click(object sender, EventArgs e)
+		{
+			// Just to make sure that a daemon is running... 
+			using (NamedMutex mutex = new NamedMutex(false, "Global\\LocationScheduler\\LSCore"))
+			{
+				if (!mutex.WaitOne(0, false))
+				{
+					// Could not grab mutex-> daemon is running
+					_MsgQueueMgr.Write(NotifMessages.NOTIF_STOP);						
+				}
+				else
+				{
+					SenseAPIs.SenseMessageBox.Show("No daemon running!", "Error", SenseMessageBoxButtons.OK);
+				}				
+			}			
+		}
 
         private void btAdd_Click(object sender)
         {
@@ -146,6 +170,21 @@ namespace Location_Scheduler
 			mTasksLoader.SaveTasksToFile(mTaskArray);
 			_MsgQueueMgr.Write(NotifMessages.NOTIF_SCAN);
 		}
+
+		private void StartDaemon()
+		{
+			String coreAppCmd = Globals.GetCurrentPath() + "\\LSCore.exe";
+			System.Diagnostics.Process.Start(coreAppCmd, "");
+			//ProcessStartInfo startInfo = new ProcessStartInfo();
+			//startInfo.FileName = coreAppCmd;
+			//Process process = new Process();
+			//process.StartInfo = startInfo;
+			//process.Start();			
+			
+		}
+
         #endregion		
+
+		
     }
 }

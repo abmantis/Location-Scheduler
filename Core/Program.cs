@@ -11,7 +11,7 @@ namespace Core
 	class Program
 	{		
 		static void Main(string[] args)
-		{
+		{			
 			Globals.WriteToDebugFile("\r\n--- Init ---");
 			using (NamedMutex mutex = new NamedMutex(false, "Global\\LocationScheduler\\LSCore"))
 			{

@@ -29,10 +29,15 @@ namespace Core
 			//Console.WriteLine("BLA: " + args.Message());
 			switch (args.Message())
 			{
+				case HelperLib.NotifMessages.NOTIF_STOP:
+					this.Shutdown();
+					_manualEvent.Set();
+					break;
 				case HelperLib.NotifMessages.NOTIF_SCAN:
 					Globals.WriteToDebugFile("Rescan");
 					_manualEvent.Set();
 					break;
+				
 			}
 			
 		}

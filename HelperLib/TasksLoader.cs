@@ -12,7 +12,7 @@ namespace HelperLib
 
 		public TasksLoader()
 		{
-			mFileToSaveTasks = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
+			mFileToSaveTasks = Globals.GetCurrentPath();//System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
 			mFileToSaveTasks += "\\tasks.xml";
 		}
 
