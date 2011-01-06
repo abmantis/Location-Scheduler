@@ -19,4 +19,11 @@ namespace HelperLib
             return result;
         }
     }
+
+	public static class NotifMessages
+	{
+		// Assign integers to messages.
+		// Note that custom Window messages start at WM_USER = 0x400.
+		public const int NOTIF_START = 0x0401;
+	}
 }

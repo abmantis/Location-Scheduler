@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using HelperLib;
 
 namespace Core
 {
@@ -10,8 +11,11 @@ namespace Core
 	{
 		static void Main(string[] args)
 		{
-			Console.Write("xpto");
+			TaskMonitor tm = new TaskMonitor();
 			Console.ReadLine();
+			tm.Shutdown();
 		}
+
+	
 	}
 }

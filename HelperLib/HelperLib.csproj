@@ -46,6 +46,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GMap.NET.WindowsMobile, Version=1.4.9.3, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL" />
+    <Reference Include="J2i.Net.NamedObjects, Version=1.0.4022.35732, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refs\J2i.Net.NamedObjects.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Windowsce.Forms" />
     <Reference Include="mscorlib" />
     <Reference Include="OpenNETCF, Version=2.3.0.39, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL" />
@@ -64,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Globals.cs" />
+    <Compile Include="MessageQueueManager.cs" />
     <Compile Include="ObjectXMLSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SenseListForm.cs">
@@ -73,6 +78,7 @@
       <DependentUpon>SenseListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Task.cs" />
+    <Compile Include="TasksLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SenseListForm.resx">

@@ -12,6 +12,9 @@ using GMap.NET;
 using System.IO;
 using System.Globalization;
 using System.Threading;
+using Microsoft.WindowsCE.Forms;
+using System.Runtime.InteropServices;
+
 
 
 namespace Location_Scheduler
@@ -20,10 +23,9 @@ namespace Location_Scheduler
 	{
 		#region Declarations
 
+		TasksLoader mTasksLoader = null;
 		int mTaskCounter = 0;
 		List<Task> mTaskArray = null;
-		String mFileToSaveTasks = null;
-		
 		SensePanelButtonItem mBtnAddTask = null;
 
 		#endregion
@@ -33,8 +35,7 @@ namespace Location_Scheduler
             InitializeComponent();
 			senseHeaderCtrl.Text = StringTable.AppTittle;
 
-			mFileToSaveTasks = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-			mFileToSaveTasks += "\\tasks.xml";
+			mTasksLoader = new TasksLoader();
         }
 
         #region Events
@@ -42,11 +43,15 @@ namespace Location_Scheduler
 		private void FormMain_Load(object sender, EventArgs e)
 		{			
 			SetupControls();
-			LoadTasksFromFile();
+			LoadTasks();
 		}
 
         private void menuItem1_Click(object sender, EventArgs e)
         {
+			//HelperLib.MessageQueueManager mqm = new MessageQueueManager(false);
+			//mqm.Write("Hello there?!");
+			//mqm.Shutdown();
+
             Application.Exit();
         }
 
@@ -102,7 +107,7 @@ namespace Location_Scheduler
 			AddPanelItemForTask(task);
 
 			mTaskArray.Add(task);
-			SaveTasksToFile();
+			mTasksLoader.SaveTasksToFile(mTaskArray);
 		}
 
 		private void AddPanelItemForTask(Task task)
@@ -116,38 +121,18 @@ namespace Location_Scheduler
 			this.senseListCtrl.AddItem(panelIt);
 		}
 
-		private void SaveTasksToFile()
-		{
-			ObjectXMLSerializer<List<Task>>.Save(mTaskArray, mFileToSaveTasks);
-		}
-
-		private void LoadTasksFromFile()
+		private void LoadTasks()
 		{
 			try
 			{
-				mTaskArray = ObjectXMLSerializer<List<Task>>.Load(mFileToSaveTasks);
-				String s ="";
-				foreach (Task task in mTaskArray)
-				{					
-					s += task.InternalIdentifier + ";";
-				}
-				MessageBox.Show(s);
-
+				mTaskArray = mTasksLoader.LoadTasksFromFile();
 				// Set internal identifiers and add panel items for each task
 				foreach (Task task in mTaskArray)
 				{
 					mTaskCounter++;
 					task.InternalIdentifier = mTaskCounter;
 					AddPanelItemForTask(task);
-				}
-
-				s = "";
-				foreach (Task task in mTaskArray)
-				{
-					s += task.InternalIdentifier + ";";
-				}
-				MessageBox.Show(s);
-				
+				}				
 			}
 #pragma warning disable 0168
 			catch (FileNotFoundException ex)
