@@ -27,6 +27,7 @@ namespace Location_Scheduler
 		int mTaskCounter = 0;
 		List<Task> mTaskArray = null;
 		SensePanelButtonItem mBtnAddTask = null;
+		MessageQueueManager _MsgQueueMgr = new MessageQueueManager(false);
 
 		#endregion
 
@@ -48,10 +49,7 @@ namespace Location_Scheduler
 
         private void menuItem1_Click(object sender, EventArgs e)
         {
-			//HelperLib.MessageQueueManager mqm = new MessageQueueManager(false);
-			//mqm.Write("Hello there?!");
-			//mqm.Shutdown();
-
+			_MsgQueueMgr.Shutdown();
             Application.Exit();
         }
 
@@ -72,6 +70,7 @@ namespace Location_Scheduler
 			if (Globals.ShowDialog(frmtaskedit, this) == DialogResult.OK)
 			{
 				panelIt.PrimaryText = task.Subject;
+				SaveTasks();
 			}
 		}
 
@@ -107,7 +106,7 @@ namespace Location_Scheduler
 			AddPanelItemForTask(task);
 
 			mTaskArray.Add(task);
-			mTasksLoader.SaveTasksToFile(mTaskArray);
+			SaveTasks();
 		}
 
 		private void AddPanelItemForTask(Task task)
@@ -140,6 +139,12 @@ namespace Location_Scheduler
 			{
 				mTaskArray = new List<Task>();
 			}			
+		}
+
+		private void SaveTasks()
+		{
+			mTasksLoader.SaveTasksToFile(mTaskArray);
+			_MsgQueueMgr.Write(NotifMessages.NOTIF_SCAN);
 		}
         #endregion		
     }

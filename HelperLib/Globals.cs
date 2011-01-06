@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using System.Resources;
+using System.IO;
 
 namespace HelperLib
 {
@@ -18,12 +19,18 @@ namespace HelperLib
             currentForm.BringToFront();
             return result;
         }
+
+		public static void WriteToDebugFile(string text)
+		{
+			StreamWriter SW;
+			SW = File.AppendText("\\Storage Card\\debug.txt");
+			SW.WriteLine(text);
+			SW.Close();
+		}
     }
 
 	public static class NotifMessages
-	{
-		// Assign integers to messages.
-		// Note that custom Window messages start at WM_USER = 0x400.
-		public const int NOTIF_START = 0x0401;
+	{		
+		public const string NOTIF_SCAN = "1";
 	}
 }

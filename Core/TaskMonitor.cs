@@ -26,8 +26,15 @@ namespace Core
 
 		private void MsgQueueMgr_Received(object sender, ReceivedMessageArgs args)
 		{
-			Console.WriteLine("BLA: " + args.Message());
-			_manualEvent.Set();
+			//Console.WriteLine("BLA: " + args.Message());
+			switch (args.Message())
+			{
+				case HelperLib.NotifMessages.NOTIF_SCAN:
+					Globals.WriteToDebugFile("Rescan");
+					_manualEvent.Set();
+					break;
+			}
+			
 		}
 	}
 }
