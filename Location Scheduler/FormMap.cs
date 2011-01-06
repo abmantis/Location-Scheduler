@@ -16,19 +16,23 @@ namespace Location_Scheduler
 	{
 		#region Declarations
 
-		private GMapOverlay overlay;
-		private PointLatLng startPos = new PointLatLng(41.1780080, -8.6087320);
+		private GMapOverlay _overlay;
+		private PointLatLng _startPos = new PointLatLng(41.1780080, -8.6087320);
+		private bool _hasStartPos = false;
+		private GMapMarkerCross _centerCross = null;
+
+		#region Properties
 		public GMap.NET.PointLatLng StartPos
 		{
-			get { return startPos; }
-			set { startPos = value; }
+			get { return _startPos; }
+			set { _startPos = value; _hasStartPos = true; }
 		}
-		private GMapMarkerCross centerCross = null;
 		public GMapMarkerCross CenterCross
 		{
-			get { return centerCross; }
+			get { return _centerCross; }
 		}
-		
+		#endregion
+
 		#endregion
 
 		public FormMap()
@@ -52,19 +56,21 @@ namespace Location_Scheduler
 			map.OnCurrentPositionChanged += new CurrentPositionChanged(Map_OnCurrentPositionChanged);
 
 			// Overlay setup
-			overlay = new GMapOverlay(this.map, "overlay");
-			this.map.Overlays.Add(overlay);
+			_overlay = new GMapOverlay(this.map, "_overlay");
+			this.map.Overlays.Add(_overlay);
 
-			this.map.CurrentPosition = startPos;
-			centerCross = new GMapMarkerCross(this.map.CurrentPosition);			
+			this.map.CurrentPosition = _startPos;
+			_centerCross = new GMapMarkerCross(this.map.CurrentPosition);			
 
 			// Add Center cross			
-			overlay.Markers.Add(centerCross);
+			_overlay.Markers.Add(_centerCross);
+
+			if (_hasStartPos) map.Zoom = 14;
 		}
 
 		private void Map_OnCurrentPositionChanged(PointLatLng point)
 		{
-			centerCross.Position = point;
+			_centerCross.Position = point;
 		}
 
 		private void menuItemSatellite_Click(object sender, EventArgs e)

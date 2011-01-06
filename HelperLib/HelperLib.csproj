@@ -45,18 +45,28 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GMap.NET.WindowsMobile, Version=1.4.9.3, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL" />
+    <Reference Include="GMap.NET.WindowsMobile, Version=1.4.9.3, Culture=neutral, PublicKeyToken=b85b9027b614afef, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refs\GMap.NET.WindowsMobile.dll</HintPath>
+    </Reference>
     <Reference Include="J2i.Net.NamedObjects, Version=1.0.4022.35732, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Refs\J2i.Net.NamedObjects.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Windowsce.Forms" />
     <Reference Include="mscorlib" />
-    <Reference Include="OpenNETCF, Version=2.3.0.39, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL" />
-    <Reference Include="OpenNETCF.Configuration, Version=2.3.0.39, Culture=neutral, PublicKeyToken=e60dbea84bb431b7, processorArchitecture=MSIL" />
-    <Reference Include="SenseSDK.Resources.QVGA, Version=1.38.3809.23995, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="SenseSDK.Resources.VGA, Version=1.38.3809.24006, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="StedySoft.SenseSDK, Version=1.39.3814.15624, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="SenseSDK.Resources.QVGA, Version=1.38.3809.23995, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refs\SenseSDK.Resources.QVGA.dll</HintPath>
+    </Reference>
+    <Reference Include="SenseSDK.Resources.VGA, Version=1.38.3809.24006, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refs\SenseSDK.Resources.VGA.dll</HintPath>
+    </Reference>
+    <Reference Include="StedySoft.SenseSDK, Version=1.39.3814.15624, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Refs\StedySoft.SenseSDK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
