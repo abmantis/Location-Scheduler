@@ -24,7 +24,10 @@ namespace Core
 
 				GC.Collect();
 
-				Cursor.Current = Cursors.Default;
+				// We have to force the cursor to the default one, otherwise
+				// it will stay in the "wait" cursor". This is probably because
+				// of the fact that the thread locks right at the startup...
+				Cursor.Current = Cursors.Default; 
 				TaskMonitor tm = new TaskMonitor();
 				//Console.ReadLine();
 				tm.Shutdown();			
