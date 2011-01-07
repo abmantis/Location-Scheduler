@@ -25,7 +25,6 @@ namespace Location_Scheduler
 	{
 		#region Declarations
 
-		TasksLoader mTasksLoader = null;
 		int mTaskCounter = 0;
 		List<Task> mTaskArray = null;
 		SensePanelButtonItem mBtnAddTask = null;
@@ -37,8 +36,6 @@ namespace Location_Scheduler
         {
             InitializeComponent();
 			senseHeaderCtrl.Text = StringTable.AppTittle;
-
-			mTasksLoader = new TasksLoader();
         }
 
         #region Events
@@ -146,28 +143,19 @@ namespace Location_Scheduler
 
 		private void LoadTasks()
 		{
-			try
+			mTaskArray = TasksLoader.LoadTasksFromFile();
+			// Set internal identifiers and add panel items for each task
+			foreach (Task task in mTaskArray)
 			{
-				mTaskArray = mTasksLoader.LoadTasksFromFile();
-				// Set internal identifiers and add panel items for each task
-				foreach (Task task in mTaskArray)
-				{
-					mTaskCounter++;
-					task.InternalIdentifier = mTaskCounter;
-					AddPanelItemForTask(task);
-				}				
-			}
-#pragma warning disable 0168
-			catch (FileNotFoundException ex)
-#pragma warning restore 0168
-			{
-				mTaskArray = new List<Task>();
-			}			
+				mTaskCounter++;
+				task.InternalIdentifier = mTaskCounter;
+				AddPanelItemForTask(task);
+			}		
 		}
 
 		private void SaveTasks()
 		{
-			mTasksLoader.SaveTasksToFile(mTaskArray);
+			TasksLoader.SaveTasksToFile(mTaskArray);
 			_MsgQueueMgr.Write(NotifMessages.NOTIF_SCAN);
 		}
 

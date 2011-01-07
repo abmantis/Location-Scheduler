@@ -6,22 +6,17 @@ using System.IO;
 
 namespace HelperLib
 {
-	public class TasksLoader
+	public static class TasksLoader
 	{
-		String mFileToSaveTasks = null;
+		static String mFileToSaveTasks = Globals.GetCurrentPath() + "\\tasks.xml";
 
-		public TasksLoader()
-		{
-			mFileToSaveTasks = Globals.GetCurrentPath();//System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase);
-			mFileToSaveTasks += "\\tasks.xml";
-		}
 
-		public void SaveTasksToFile(List<Task> taskArray)
+		public static void SaveTasksToFile(List<Task> taskArray)
 		{
 			ObjectXMLSerializer<List<Task>>.Save(taskArray, mFileToSaveTasks);
 		}
 
-		public List<Task> LoadTasksFromFile()
+		public static List<Task> LoadTasksFromFile()
 		{
 			List<Task> taskArray;
 			try

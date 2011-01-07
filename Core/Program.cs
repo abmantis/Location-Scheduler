@@ -28,9 +28,9 @@ namespace Core
 				// it will stay in the "wait" cursor". This is probably because
 				// of the fact that the thread locks right at the startup...
 				Cursor.Current = Cursors.Default; 
-				TaskMonitor tm = new TaskMonitor();
+				TasksMonitor tm = new TasksMonitor();
 				//Console.ReadLine();
-				tm.Shutdown();			
+				tm.Shutdown();
 			}
 
 			Globals.WriteToDebugFile("--- Shutdown ---");
