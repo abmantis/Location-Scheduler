@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using HelperLib;
 using OpenNETCF.Threading;
+using System.Windows.Forms;
 
 namespace Core
 {
@@ -22,9 +23,10 @@ namespace Core
 				}			
 
 				GC.Collect();
-				
+
+				Cursor.Current = Cursors.Default;
 				TaskMonitor tm = new TaskMonitor();
-				Console.ReadLine();
+				//Console.ReadLine();
 				tm.Shutdown();			
 			}
 
