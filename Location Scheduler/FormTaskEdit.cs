@@ -58,6 +58,10 @@ namespace Location_Scheduler
 			{
 				TaskClassToDialog();
 			}
+			else
+			{
+				menuItemDelete.Enabled = false;
+			}
         }
         
 		private void menuItem1_Click(object sender, EventArgs e)
@@ -73,9 +77,14 @@ namespace Location_Scheduler
 			Close();
 		}
 
-		private void menuItem2_Click(object sender, EventArgs e)
+		private void menuItemCancel_Click(object sender, EventArgs e)
 		{
 			this.DialogResult = DialogResult.Cancel;
+			Close();
+		}
+		private void menuItemDelete_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.Abort;
 			Close();
 		}
 

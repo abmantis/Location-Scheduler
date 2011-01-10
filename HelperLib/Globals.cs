@@ -29,9 +29,10 @@ namespace HelperLib
 		public static void WriteToDebugFile(string text)
 		{
 #if DEBUG
+			DateTime now = DateTime.Now;
 			StreamWriter SW;
 			SW = File.AppendText("\\Storage Card\\debug.txt");
-			SW.WriteLine(text);
+			SW.WriteLine(now.ToString() + ": " + text);
 			SW.Close();
 #endif
 		}
@@ -95,7 +96,7 @@ namespace HelperLib
 			}
 			else
 			{
-				msDif = HoursToMilliseconds((23 - from.Hour) + to.Hour);
+				msDif = HoursToMilliseconds(24 - from.Hour + to.Hour);
 			}
 			msDif += MinutesToMilliseconds(to.Minute - from.Minute);
 			return msDif;

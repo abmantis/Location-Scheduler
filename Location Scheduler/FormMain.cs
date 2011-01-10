@@ -25,7 +25,7 @@ namespace Location_Scheduler
 	{
 		#region Declarations
 
-		int mTaskCounter = 0;
+		int mLastTaskID = 0;
 		List<Task> mTaskArray = null;
 		SensePanelButtonItem mBtnAddTask = null;
 		MessageQueueManager _MsgQueueMgr = new MessageQueueManager(false);
@@ -88,10 +88,20 @@ namespace Location_Scheduler
 			SensePanelItem panelIt = (SensePanelItem)Sender;
 			Task task = mTaskArray.Find(delegate(Task p) { return p.InternalIdentifier == (int)panelIt.Tag; });
 			FormTaskEdit frmtaskedit = new FormTaskEdit(task);
-			if (Globals.ShowDialog(frmtaskedit, this) == DialogResult.OK)
+			DialogResult taskEditResult = Globals.ShowDialog(frmtaskedit, this);
+			switch (taskEditResult)
 			{
-				panelIt.PrimaryText = task.Subject;
-				SaveTasks();
+				case DialogResult.OK:
+				{
+					panelIt.PrimaryText = task.Subject;
+					SaveTasks();
+					break;
+				}
+				case DialogResult.Abort:
+				{
+					DelTask(task);
+					break;
+				}
 			}
 		}
 
@@ -122,12 +132,35 @@ namespace Location_Scheduler
 
 		private void AddTask(Task task)
 		{
-			mTaskCounter++;
-			task.InternalIdentifier = mTaskCounter;
-			AddPanelItemForTask(task);
+			lock (senseListCtrl)
+			{
+				mLastTaskID++;
+				task.InternalIdentifier = mLastTaskID;
+				AddPanelItemForTask(task);
 
-			mTaskArray.Add(task);
-			SaveTasks();
+				mTaskArray.Add(task);
+				SaveTasks();
+			}
+		}
+
+		private void DelTask(Task task)
+		{
+			lock (senseListCtrl)
+			{
+				int panelCount = senseListCtrl.Count;
+				for(int i = 0; i < panelCount; i++ ) 
+				{
+					int id = (senseListCtrl[i].Tag == null) ? -1 : (int)senseListCtrl[i].Tag;
+					if (id == task.InternalIdentifier)
+					{
+						senseListCtrl.RemoveItem(i);
+						break;
+					}
+				}
+
+				mTaskArray.Remove(task);
+				SaveTasks();
+			}
 		}
 
 		private void AddPanelItemForTask(Task task)
@@ -147,8 +180,8 @@ namespace Location_Scheduler
 			// Set internal identifiers and add panel items for each task
 			foreach (Task task in mTaskArray)
 			{
-				mTaskCounter++;
-				task.InternalIdentifier = mTaskCounter;
+				mLastTaskID++;
+				task.InternalIdentifier = mLastTaskID;
 				AddPanelItemForTask(task);
 			}		
 		}

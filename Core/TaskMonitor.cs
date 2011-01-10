@@ -18,25 +18,30 @@ namespace Core
 	{
 		MessageQueueManager _MsgQueueMgr = new MessageQueueManager(true);
 		AutoResetEvent _resetEvent = new AutoResetEvent(false);
-		List<TasksMonitorTask> _taskMonitorList = null;
+		List<TasksMonitorTask> _taskMonitorList = new List<TasksMonitorTask>();
 		bool _initDone = false;
 		bool _shutdown = false;
 		int _updateInterval = 10 * 1000; 
 		Time _lastUpdate = null;
+		int _errorCount = 0;
 
 		public TasksMonitor()
 		{
 			_MsgQueueMgr.Received += new MessageQueueManager.ReceivedEventHandler(MsgQueueMgr_Received);
-			if (LoadTasks())
+			int msToNext = LoadTasks();
+			if (_taskMonitorList.Count > 0)
 			{				
 				_initDone = true;
-				Globals.WriteToDebugFile("TasksMonitor init done.");
-				_resetEvent.WaitOne();
+				Globals.WriteToDebugFile("TaskMonitor: TasksMonitor init done.");
+				SleepingPrincess(msToNext);
+				StartUpdateCycle();
 			}
+			Shutdown();
 		}
 
-		public void Shutdown()
+		private void Shutdown()
 		{
+			Globals.WriteToDebugFile("TaskMonitor: Shutdown");
 			_MsgQueueMgr.Shutdown();
 		}
 
@@ -45,44 +50,54 @@ namespace Core
 			switch (args.Message())
 			{
 				case HelperLib.NotifMessages.NOTIF_STOP:
+					Globals.WriteToDebugFile("TaskMonitor: Received shutdown notification");
 					_shutdown = true;
 					_resetEvent.Set();
 					break;
 				case HelperLib.NotifMessages.NOTIF_SCAN:
-					if (!_initDone) { Globals.WriteToDebugFile("Skiping rescan"); return; }
+					Globals.WriteToDebugFile("TaskMonitor: Received rescan notification");
+					if (!_initDone) { Globals.WriteToDebugFile("TaskMonitor: Skiping rescan"); return; }
 					LoadTasks();
 					_resetEvent.Set();
 					break;
 			}
 		}
 
-		private bool LoadTasks()
+		private int LoadTasks()
 		{
-			Globals.WriteToDebugFile("Loading Tasks");
-			Time now = new Time(DateTime.Now);
-			List<Task> taskList = TasksLoader.LoadTasksFromFile();
-			foreach (Task task in taskList)
+			lock (_taskMonitorList)
 			{
-				TasksMonitorTask tmt = new TasksMonitorTask();
-				tmt.task = task;
-				tmt.msToStart = GetMsToTask(now, task);
-				_taskMonitorList.Add(tmt);
-			}
-			_lastUpdate = now;
-
-			if (_taskMonitorList.Count > 0) return true;
-			return false;			
+				int msToNext = 86400000; //24h * 60m * 60s * 1000 <- the max wait time is 24h
+				Globals.WriteToDebugFile("TaskMonitor: Loading Tasks");
+				Time now = new Time(DateTime.Now);
+				List<Task> taskList = TasksLoader.LoadTasksFromFile();
+				foreach (Task task in taskList)
+				{
+					TasksMonitorTask tmt = new TasksMonitorTask();
+					tmt.task = task;
+					tmt.msToStart = GetMsToTask(now, task);
+					_taskMonitorList.Add(tmt);
+					if (tmt.msToStart < msToNext) msToNext = tmt.msToStart.Value;
+				}
+				_lastUpdate = now;
+				return msToNext;
+			}	
 		}
 
-		private void Update()
+		private void StartUpdateCycle()
 		{
+			Globals.WriteToDebugFile("TaskMonitor: Starting Update Cycle");
 			while (!_shutdown)
 			{
-				int msToWait = ProcessTasks();
-				_resetEvent.WaitOne(msToWait, false);
+				// Lock - Make sure there's nothing changing the task list
+				int msToWait = 0;
+				lock (_taskMonitorList)
+				{
+					msToWait = ProcessTasks();
+				}
+				SleepingPrincess(msToWait);
+				if (_errorCount > 5) _shutdown = true;
 			}
-
-			Shutdown();
 		}
 
 		private int ProcessTasks()
@@ -98,7 +113,7 @@ namespace Core
 				{
 					ProcessTask(tmt.task);
 					tmt.msToStart = GetMsToTask(now, tmt.task);
-				}				
+				}
 
 				if (msToNext > tmt.msToStart.Value)
 				{
@@ -145,17 +160,17 @@ namespace Core
 			}
 			else
 			{
-				if (nowStartTimeCompare <= 0)
-				{
-					// Task will start later today
-					msToTask = TimeFuncs.HoursToMilliseconds(task.MonitorStartTime.Hour - now.Hour);
-				}
-				else
-				{
-					// Task will only start "tomorrow"
-					msToTask = TimeFuncs.HoursToMilliseconds((23 - now.Hour) + task.MonitorStartTime.Hour);
-				}
-				msToTask += TimeFuncs.MinutesToMilliseconds(task.MonitorStartTime.Minute - now.Minute);
+				//if (nowStartTimeCompare <= 0)
+				//{
+				//    // Task will start later today
+				//    msToTask = TimeFuncs.HoursToMilliseconds(task.MonitorStartTime.Hour - now.Hour);
+				//}
+				//else
+				//{
+				//    // Task will only start "tomorrow"
+				//    msToTask = TimeFuncs.HoursToMilliseconds((23 - now.Hour) + task.MonitorStartTime.Hour);
+				//}
+				msToTask = TimeFuncs.GetMsFromTo(now, task.MonitorStartTime);
 			}
 
 			return msToTask;
@@ -164,6 +179,19 @@ namespace Core
 		private void ProcessTask(Task t)
 		{
 
+		}
+
+		private void SleepingPrincess(int sleepMs)
+		{
+			if (sleepMs < 0)
+			{
+				Globals.WriteToDebugFile("TaskMonitor: ERROR: Invalid sleep time: " + sleepMs);
+				sleepMs = 0;
+				_errorCount++;
+				return;
+			}
+			Globals.WriteToDebugFile("TaskMonitor: Sleeping time: " + sleepMs);
+			_resetEvent.WaitOne(sleepMs, false);
 		}
 	}
 }

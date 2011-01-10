@@ -13,7 +13,7 @@ namespace Core
 	{		
 		static void Main(string[] args)
 		{			
-			Globals.WriteToDebugFile("\r\n--- Init ---");
+			Globals.WriteToDebugFile("--- Init ---");
 			using (NamedMutex mutex = new NamedMutex(false, "Global\\LocationScheduler\\LSCore"))
 			{
 				if (!mutex.WaitOne(0, false))
@@ -29,8 +29,7 @@ namespace Core
 				// of the fact that the thread locks right at the startup...
 				Cursor.Current = Cursors.Default; 
 				TasksMonitor tm = new TasksMonitor();
-				//Console.ReadLine();
-				tm.Shutdown();
+
 			}
 
 			Globals.WriteToDebugFile("--- Shutdown ---");
