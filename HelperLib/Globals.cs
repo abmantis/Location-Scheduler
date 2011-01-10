@@ -76,18 +76,18 @@ namespace HelperLib
 		//{
 		//    return CompareTime(t1, new Time(t2));
 		//}
-		public static long HoursToMilliseconds(long hours)
+		public static int HoursToMilliseconds(int hours)
 		{
 			return hours * 3600000; // hours * 60m * 60s * 1000
 		}
-		public static long MinutesToMilliseconds(long minutes)
+		public static int MinutesToMilliseconds(int minutes)
 		{
 			return minutes * 60000; // minutes * 60s * 1000
 
 		}
-		public static long GetMsFromTo(Time from, Time to)
+		public static int GetMsFromTo(Time from, Time to)
 		{
-			long msDif;
+			int msDif;
 			int compare = CompareTime(from, to);
 			if (compare <= 0)
 			{
