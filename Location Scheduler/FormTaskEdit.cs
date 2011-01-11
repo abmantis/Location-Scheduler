@@ -91,14 +91,18 @@ namespace Location_Scheduler
 		void OnBtnSetLocation(object Sender)
 		{
 			FormMap frmMap = new FormMap();
-			if (mTask.LocationCoord.HasValue)
+			if (mTask.LocationCoord != null)
 			{
-				frmMap.StartPos = mTask.LocationCoord.Value;
+				frmMap.StartPos = new PointLatLng(mTask.LocationCoord.Latitude, mTask.LocationCoord.Longitude);
 			}
 			if (Globals.ShowDialog(frmMap, this) == DialogResult.OK)
 			{
-				mTask.LocationCoord = frmMap.CenterCross.Position;
-				Placemark place = GMaps.Instance.GetPlacemarkFromGeocoder(mTask.LocationCoord.Value);
+				Position_Lib.Coordinates coord = new Position_Lib.Coordinates();
+				coord.Latitude = frmMap.CenterCross.Position.Lat;
+				coord.Longitude = frmMap.CenterCross.Position.Lng;
+				mTask.LocationCoord = coord;
+
+				Placemark place = GMaps.Instance.GetPlacemarkFromGeocoder(frmMap.CenterCross.Position);
 				if (place != null)
 				{
 					mTask.LocationAddress = place.Address;

@@ -7,6 +7,7 @@ using HelperLib;
 using OpenNETCF.Threading;
 using System.Windows.Forms;
 
+
 namespace Core
 {
 	class Program
@@ -14,6 +15,7 @@ namespace Core
 		static void Main(string[] args)
 		{			
 			Globals.WriteToDebugFile("--- Init ---");
+
 			using (NamedMutex mutex = new NamedMutex(false, "Global\\LocationScheduler\\LSCore"))
 			{
 				if (!mutex.WaitOne(0, false))
@@ -33,10 +35,6 @@ namespace Core
 			}
 
 			Globals.WriteToDebugFile("--- Shutdown ---");
-		}
-
-		
-
-	
+		}	
 	}
 }

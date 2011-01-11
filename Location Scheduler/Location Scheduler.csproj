@@ -140,6 +140,10 @@
       <Project>{35208667-FD6D-4B37-9566-AAEFE580E872}</Project>
       <Name>HelperLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PositionTools\Position_Lib.csproj">
+      <Project>{DB9FCA48-9402-47A4-949B-4211B4D75F1F}</Project>
+      <Name>Position_Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

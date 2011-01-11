@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using StedySoft.SenseSDK;
 using GMap.NET;
-using System.Xml.Serialization;	 //For serialization of an object to an XML Document file.
+using System.Xml.Serialization;
+using Position_Lib;	 //For serialization of an object to an XML Document file.
 
 namespace HelperLib
 {
@@ -17,8 +18,9 @@ namespace HelperLib
 		private int internalIdentifier = 0;
 		private String subject = null;
 		private String notes = null;
-		private PointLatLng? locationCoord = null;
+		private Coordinates locationCoord = null;
 		private String locationAddress = null;
+		private double radius = 0.1; //km
 		private String monitorStartTimeStr = null;
 		private String monitorEndTimeStr = null;
 		private Time monitorStartTime = null;
@@ -55,8 +57,8 @@ namespace HelperLib
 			get { return notes; }
 			set { notes = value; }
 		}
-		
-		public PointLatLng? LocationCoord
+
+		public Coordinates LocationCoord
 		{
 			get { return locationCoord; }
 			set { locationCoord = value; }
@@ -66,6 +68,12 @@ namespace HelperLib
 		{
 			get { return locationAddress; }
 			set { locationAddress = value; }
+		}
+
+		public double Radius
+		{
+			get { return radius; }
+			set { radius = value; }
 		}
 
 		public String MonitorStartTimeStr
@@ -140,7 +148,7 @@ namespace HelperLib
 				return false;
 			}
 
-			if (locationCoord.HasValue != true)
+			if (locationCoord == null)
 			{
 				message = "You have to specify a location";
 				return false;

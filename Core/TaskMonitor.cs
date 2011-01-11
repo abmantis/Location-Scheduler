@@ -5,6 +5,7 @@ using System.Text;
 using HelperLib;
 using System.Threading;
 using StedySoft.SenseSDK;
+using Position_Lib;
 
 namespace Core
 {
@@ -12,6 +13,7 @@ namespace Core
 	{
 		public Task task = null;
 		public int? msToStart = null;
+		public bool processed = false;
 	}
 
 	class TasksMonitor
@@ -24,6 +26,7 @@ namespace Core
 		int _updateInterval = 10 * 1000; 
 		Time _lastUpdate = null;
 		int _errorCount = 0;
+		PositionTools _positionTools = new PositionTools();
 
 		public TasksMonitor()
 		{
@@ -43,6 +46,7 @@ namespace Core
 		{
 			Globals.WriteToDebugFile("TaskMonitor: Shutdown");
 			_MsgQueueMgr.Shutdown();
+			_positionTools.Shutdown();
 		}
 
 		private void MsgQueueMgr_Received(object sender, ReceivedMessageArgs args)
@@ -105,14 +109,25 @@ namespace Core
 			int msToNext = 86400000; //24h * 60m * 60s * 1000 <- the max wait time is 24h
 			Time now = new Time(DateTime.Now);
 			int msFromLastUpd = TimeFuncs.GetMsFromTo(_lastUpdate, now);
+			Coordinates currentPos = _positionTools.GetCurrentPosition();			
+
 			foreach (TasksMonitorTask tmt in _taskMonitorList)
 			{
 				tmt.msToStart -= msFromLastUpd;
-
+				
 				if (tmt.msToStart <= 0)
 				{
-					ProcessTask(tmt.task);
 					tmt.msToStart = GetMsToTask(now, tmt.task);
+					if (tmt.processed) continue;
+
+					if (currentPos.IsValid())
+					{
+						tmt.processed = ProcessTask(tmt.task, currentPos);
+					}
+				}
+				else
+				{
+					tmt.processed = false;
 				}
 
 				if (msToNext > tmt.msToStart.Value)
@@ -176,9 +191,16 @@ namespace Core
 			return msToTask;
 		}
 
-		private void ProcessTask(Task t)
+		private bool ProcessTask(Task task, Coordinates currentPos)
 		{
+			if(!task.LocationCoord.IsValid()) return false;		
+			
+			double distance = PositionTools.GetDistance(currentPos, task.LocationCoord);
+			Globals.WriteToDebugFile("TaskMonitor: Task " + task.Subject + " distance: " + distance);
+			if (distance > task.Radius) return false;
 
+			Globals.WriteToDebugFile("TaskMonitor: Processed task: " + task.Subject);
+			return true;
 		}
 
 		private void SleepingPrincess(int sleepMs)
