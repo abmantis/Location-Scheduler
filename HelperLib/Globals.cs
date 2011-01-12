@@ -44,6 +44,9 @@ namespace HelperLib
 	{
 		public static int CompareTime(Time t1, Time t2)
 		{
+			t1.ConvertTo24HrFormat();
+			t2.ConvertTo24HrFormat();
+
 			if (t1.Hour < t2.Hour)
 			{
 				return -1;
@@ -88,6 +91,9 @@ namespace HelperLib
 		}
 		public static int GetMsFromTo(Time from, Time to)
 		{
+			from.ConvertTo24HrFormat();
+			to.ConvertTo24HrFormat();
+
 			int msDif;
 			int compare = CompareTime(from, to);
 			if (compare <= 0)

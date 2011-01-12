@@ -13,7 +13,6 @@ namespace Core
 	{
 		public Task task = null;
 		public int? msToStart = null;
-		public bool processed = false;
 	}
 
 	class TasksMonitor
@@ -23,7 +22,7 @@ namespace Core
 		List<TasksMonitorTask> _taskMonitorList = new List<TasksMonitorTask>();
 		bool _initDone = false;
 		bool _shutdown = false;
-		int _updateInterval = 10 * 1000; 
+		int _updateInterval = 4 * 1000; 
 		Time _lastUpdate = null;
 		int _errorCount = 0;
 		PositionTools _positionTools = new PositionTools();
@@ -118,17 +117,19 @@ namespace Core
 				if (tmt.msToStart <= 0)
 				{
 					tmt.msToStart = GetMsToTask(now, tmt.task);
-					if (tmt.processed) continue;
 
-					if (currentPos.IsValid())
-					{
-						tmt.processed = ProcessTask(tmt.task, currentPos);
-					}
-				}
-				else
-				{
-					tmt.processed = false;
-				}
+					// re-check
+					if (tmt.msToStart <= 0)
+					{						
+						if (currentPos.IsValid())
+						{
+							if (ProcessTask(tmt.task, currentPos))
+							{
+								tmt.msToStart = TimeFuncs.GetMsFromTo(now, tmt.task.MonitorStartTime);
+							}
+						}
+					}					
+				}				
 
 				if (msToNext > tmt.msToStart.Value)
 				{
@@ -136,7 +137,7 @@ namespace Core
 				}
 			}
 
-			if (msToNext <= 0)
+			if (msToNext < _updateInterval)
 			{
 				msToNext = _updateInterval;
 			}

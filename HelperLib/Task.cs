@@ -172,9 +172,10 @@ namespace HelperLib
 					break;
 			}
 
-			//if( monitorStartTime.Hour > monitorEndTime.Hour ||
-			//    (monitorStartTime.Hour == monitorEndTime.Hour && monitorStartTime.Minute >= monitorEndTime.Minute))
-			if (TimeFuncs.CompareTime(monitorStartTime, monitorEndTime) != -1)
+			//if (TimeFuncs.CompareTime(monitorStartTime, monitorEndTime) != -1)
+			Time start = monitorStartTime;
+			Time end = monitorEndTime;
+			if( (start.Hour - end.Hour) == 0 && (start.Minute - end.Minute) == 0)
 			{
 				message = "The monitor period is invalid";
 				return false;

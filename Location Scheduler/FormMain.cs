@@ -36,6 +36,8 @@ namespace Location_Scheduler
         {
             InitializeComponent();
 			senseHeaderCtrl.Text = StringTable.AppTittle;
+			int x = 0;
+			SenseAPIs.SenseNumericBox.Show("blalala",ref x);
         }
 
         #region Events
@@ -73,6 +75,17 @@ namespace Location_Scheduler
 				}				
 			}			
 		}
+
+		private void menuItemSetRefreshRate_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void menuItemUseNonGpsLoc_Click(object sender, EventArgs e)
+		{
+
+		}
+
 
         private void btAdd_Click(object sender)
         {

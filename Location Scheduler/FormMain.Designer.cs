@@ -16,8 +16,11 @@
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
 			this.menuItem1 = new System.Windows.Forms.MenuItem();
 			this.menuItem2 = new System.Windows.Forms.MenuItem();
-			this.menuItemStopDaemon = new System.Windows.Forms.MenuItem();
+			this.menuItemSetRefreshRate = new System.Windows.Forms.MenuItem();
+			this.menuItemUseNonGpsLoc = new System.Windows.Forms.MenuItem();
+			this.menuItem5 = new System.Windows.Forms.MenuItem();
 			this.menuItemStartDaemon = new System.Windows.Forms.MenuItem();
+			this.menuItemStopDaemon = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -32,19 +35,36 @@
 			// 
 			// menuItem2
 			// 
+			this.menuItem2.MenuItems.Add(this.menuItemSetRefreshRate);
+			this.menuItem2.MenuItems.Add(this.menuItemUseNonGpsLoc);
+			this.menuItem2.MenuItems.Add(this.menuItem5);
 			this.menuItem2.MenuItems.Add(this.menuItemStartDaemon);
 			this.menuItem2.MenuItems.Add(this.menuItemStopDaemon);
 			this.menuItem2.Text = "Options";
 			// 
-			// menuItemStopDaemon
+			// menuItemSetRefreshRate
 			// 
-			this.menuItemStopDaemon.Text = "Stop daemon";
-			this.menuItemStopDaemon.Click += new System.EventHandler(this.menuItemStopDaemon_Click);
+			this.menuItemSetRefreshRate.Text = "Set refresh rate";
+			this.menuItemSetRefreshRate.Click += new System.EventHandler(this.menuItemSetRefreshRate_Click);
+			// 
+			// menuItemUseNonGpsLoc
+			// 
+			this.menuItemUseNonGpsLoc.Text = "Use non-gps location";
+			this.menuItemUseNonGpsLoc.Click += new System.EventHandler(this.menuItemUseNonGpsLoc_Click);
+			// 
+			// menuItem5
+			// 
+			this.menuItem5.Text = "-";
 			// 
 			// menuItemStartDaemon
 			// 
 			this.menuItemStartDaemon.Text = "Start daemon";
 			this.menuItemStartDaemon.Click += new System.EventHandler(this.menuItemStartDaemon_Click);
+			// 
+			// menuItemStopDaemon
+			// 
+			this.menuItemStopDaemon.Text = "Stop daemon";
+			this.menuItemStopDaemon.Click += new System.EventHandler(this.menuItemStopDaemon_Click);
 			// 
 			// FormMain
 			// 
@@ -67,6 +87,9 @@
 		private System.Windows.Forms.MenuItem menuItem2;
 		private System.Windows.Forms.MenuItem menuItemStartDaemon;
 		private System.Windows.Forms.MenuItem menuItemStopDaemon;
+		private System.Windows.Forms.MenuItem menuItemSetRefreshRate;
+		private System.Windows.Forms.MenuItem menuItemUseNonGpsLoc;
+		private System.Windows.Forms.MenuItem menuItem5;
 
     }
 }

@@ -58,6 +58,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CellLocationClass.cs" />
+    <Compile Include="CellLocation\CellData.cs" />
+    <Compile Include="CellLocation\GeoLocation.cs" />
+    <Compile Include="CellLocation\GoogleMapsCellService.cs" />
+    <Compile Include="CellLocation\OpenCellIDCellService.cs" />
+    <Compile Include="CellLocation\RILCellTowerInfo.cs" />
     <Compile Include="PositionTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

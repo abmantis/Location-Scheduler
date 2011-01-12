@@ -80,6 +80,12 @@ namespace Position_Lib
 		public Coordinates GetCurrentPosition()
 		{
 			Coordinates coord = GetGPSPosition();
+			
+			if (!coord.IsValid() && _useCellLocation)
+			{
+				coord = CellLocationClass.GetCurrentPosition();
+			}
+			
 			return coord;
 		}
 
