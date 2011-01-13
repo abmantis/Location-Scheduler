@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.WindowsMobile.Samples.Location;
+using HelperLib;
 
 namespace Position_Lib
 {
@@ -13,10 +13,15 @@ namespace Position_Lib
 		
 		internal GpsLocationClass()
 		{
-			_gps.DeviceStateChanged += new DeviceStateChangedEventHandler(gps_DeviceStateChanged);
+			_gps.DeviceStateChanged += new DeviceStateChangedEventHandler(gps_DeviceStateChanged);			
+		}
+
+		public void Init()
+		{
 			if (!_gps.Opened)
 			{
 				_gps.Open();
+				_gpsDeviceState = _gps.GetDeviceState();
 			}
 		}
 
@@ -28,7 +33,7 @@ namespace Position_Lib
 			}
 		}
 
-		public Coordinates GetPosition()
+		public Coordinates GetPosition(int maxAge)
 		{
 			Coordinates retCoords = new Coordinates();
 
@@ -37,7 +42,7 @@ namespace Position_Lib
 				_gpsDeviceState.ServiceState == GpsServiceState.On)
 			{
 				//TimeSpan maxage = new TimeSpan(0, 0, 1);
-				GpsPosition position = _gps.GetPosition(TimeSpan.Zero);
+				GpsPosition position = _gps.GetPosition(maxAge);
 				if (position.LatitudeValid && position.LongitudeValid)
 				{
 					retCoords.Latitude = position.Latitude;

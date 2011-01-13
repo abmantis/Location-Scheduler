@@ -98,13 +98,27 @@ namespace Core
 		{
 			Globals.WriteToDebugFile("TaskMonitor: Starting Update Cycle");
 			while (!_shutdown)
-			{
-				// Lock - Make sure there's nothing changing the task list
+			{			
 				int msToWait = 0;
+				_positionTools.Init(); // start location stuff (if it is no already started)
+
+				// Lock - Make sure there's nothing changing the task list
 				lock (_taskMonitorList)
 				{
 					msToWait = ProcessTasks();
 				}
+
+				if (msToWait > 1800000) // 1800000ms = 30min
+				{
+					// we will not need location stuff for a long time, so
+					// let's turn it off to save some battery
+					_positionTools.Shutdown();
+
+					// let's wake it some minutes before any task needs to be 
+					// processed to give GPS some time to initialize
+					msToWait -= 300000; // 300000ms = 5min
+				}
+
 				SleepingPrincess(msToWait);
 				if (_errorCount > 5) _shutdown = true;
 			}
@@ -115,7 +129,7 @@ namespace Core
 			int msToNext = 86400000; //24h * 60m * 60s * 1000 <- the max wait time is 24h
 			Time now = new Time(DateTime.Now);
 			int msFromLastUpd = TimeFuncs.GetMsFromTo(_lastUpdate, now);
-			Coordinates currentPos = _positionTools.GetCurrentPosition();			
+			Coordinates currentPos = _positionTools.GetCurrentPosition(_updateRate);			
 
 			foreach (TasksMonitorTask tmt in _taskMonitorList)
 			{
@@ -127,7 +141,7 @@ namespace Core
 
 					// re-check
 					if (tmt.msToStart <= 0)
-					{						
+					{
 						if (currentPos.IsValid())
 						{
 							if (ProcessTask(tmt.task, currentPos))
@@ -135,8 +149,8 @@ namespace Core
 								tmt.msToStart = TimeFuncs.GetMsFromTo(now, tmt.task.MonitorStartTime);
 							}
 						}
-					}					
-				}				
+					}
+				}
 
 				if (msToNext > tmt.msToStart.Value)
 				{

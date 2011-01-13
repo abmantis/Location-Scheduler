@@ -2,53 +2,11 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using HelperLib;
 
 
 namespace Position_Lib
 {
-	public class Coordinates
-	{
-		double? latitude = null;
-		
-		double? longitude = null;
-
-		double precision = 0;
-
-		public Coordinates() { }
-
-		public Coordinates(double lat, double lon)
-		{
-			latitude = lat;
-			longitude = lon;
-		}
-		public Coordinates(double lat, double lon, double precision) : this(lat, lon)
-		{
-			this.precision = precision;
-		}
-
-		public double Latitude
-		{
-			get { return (latitude.HasValue)? latitude.Value : 0; }
-			set { latitude = value; }
-		}
-		public double Longitude
-		{
-			get { return (longitude.HasValue) ? longitude.Value : 0; }
-			set { longitude = value; }
-		}
-		public double Precision
-		{
-			get { return precision; }
-			set { precision = value; }
-		}
-
-		public bool IsValid()
-		{
-			return (latitude.HasValue && longitude.HasValue);
-		}
-
-	}
-	
 	public class PositionTools
 	{
 		static int _earthRadius = 6371; // km
@@ -66,16 +24,23 @@ namespace Position_Lib
 			set { _useCellLocation = value; }
 		}
 
+		public void Init()
+		{
+			Globals.WriteToDebugFile("PositionTools: Init");
+			_gpsLoc.Init();
+		}
+
 		public void Shutdown()
 		{
+			Globals.WriteToDebugFile("PositionTools: Shutdown");
 			_gpsLoc.Shutdown();
 		}
 
-		public Coordinates GetCurrentPosition()
+		public Coordinates GetCurrentPosition(int maxGpsAge)
 		{			
 			try
 			{
-				Coordinates coord = _gpsLoc.GetPosition();
+				Coordinates coord = _gpsLoc.GetPosition(maxGpsAge);
 				if (!coord.IsValid() && _useCellLocation)
 				{
 					coord = CellLocationClass.GetCurrentPosition();
@@ -88,8 +53,6 @@ namespace Position_Lib
 
 			return new Coordinates();
 		}
-
-		
 
 		public static double GetDistance(Coordinates coord1, Coordinates coord2)
 		{

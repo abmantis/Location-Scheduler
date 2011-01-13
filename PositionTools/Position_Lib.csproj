@@ -45,10 +45,6 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.WindowsMobile.Samples.Location, Version=1.0.4028.34991, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Refs\Microsoft.WindowsMobile.Samples.Location.dll</HintPath>
-    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -65,8 +61,21 @@
     <Compile Include="CellLocation\OpenCellIDCellService.cs" />
     <Compile Include="CellLocation\RILCellTowerInfo.cs" />
     <Compile Include="GpsLocationClass.cs" />
+    <Compile Include="GPSLocation\DegreesMinutesSeconds.cs" />
+    <Compile Include="GPSLocation\DeviceStateChangedEventArgs.cs" />
+    <Compile Include="GPSLocation\GPS.cs" />
+    <Compile Include="GPSLocation\GpsDeviceState.cs" />
+    <Compile Include="GPSLocation\GpsPosition.cs" />
+    <Compile Include="GPSLocation\LocationChangedEventArgs.cs" />
+    <Compile Include="GPSLocation\Utils.cs" />
     <Compile Include="PositionTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HelperLib\HelperLib.csproj">
+      <Project>{35208667-FD6D-4B37-9566-AAEFE580E872}</Project>
+      <Name>HelperLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

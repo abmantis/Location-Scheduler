@@ -5,7 +5,6 @@ using System.Text;
 using StedySoft.SenseSDK;
 using GMap.NET;
 using System.Xml.Serialization;
-using Position_Lib;	 //For serialization of an object to an XML Document file.
 
 namespace HelperLib
 {

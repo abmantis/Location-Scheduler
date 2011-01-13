@@ -97,7 +97,7 @@ namespace Location_Scheduler
 			}
 			if (Globals.ShowDialog(frmMap, this) == DialogResult.OK)
 			{
-				Position_Lib.Coordinates coord = new Position_Lib.Coordinates();
+				Coordinates coord = new Coordinates();
 				coord.Latitude = frmMap.CenterCross.Position.Lat;
 				coord.Longitude = frmMap.CenterCross.Position.Lng;
 				mTask.LocationCoord = coord;
