@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.WindowsMobile.Samples.Location;
+
 
 namespace Position_Lib
 {
@@ -53,14 +53,11 @@ namespace Position_Lib
 	{
 		static int _earthRadius = 6371; // km
 		bool _useCellLocation = false;
-		Gps _gps = new Gps();
+		GpsLocationClass _gpsLoc = new GpsLocationClass();
 
 		public PositionTools()
 		{
-			if (!_gps.Opened)
-			{
-				_gps.Open();
-			}
+			
 		}
 		
 		public bool UseCellLocation
@@ -71,36 +68,28 @@ namespace Position_Lib
 
 		public void Shutdown()
 		{
-			if (_gps.Opened)
-            {
-                _gps.Close();
-			}
+			_gpsLoc.Shutdown();
 		}
 
 		public Coordinates GetCurrentPosition()
-		{
-			Coordinates coord = GetGPSPosition();
-			
-			if (!coord.IsValid() && _useCellLocation)
+		{			
+			try
 			{
-				coord = CellLocationClass.GetCurrentPosition();
+				Coordinates coord = _gpsLoc.GetPosition();
+				if (!coord.IsValid() && _useCellLocation)
+				{
+					coord = CellLocationClass.GetCurrentPosition();
+				}
+				return coord;
 			}
-			
-			return coord;
+#pragma warning disable 0168
+			catch (System.Exception ex) { }
+#pragma warning restore 0168
+
+			return new Coordinates();
 		}
 
-		private Coordinates GetGPSPosition()
-		{
-			Coordinates retCoords = new Coordinates();
-			GpsPosition position = _gps.GetPosition();
-			if (position.LatitudeValid && position.LongitudeValid)
-			{
-				retCoords.Latitude = position.Latitude;
-				retCoords.Longitude = position.Longitude;
-			}
-
-			return retCoords;			
-		}
+		
 
 		public static double GetDistance(Coordinates coord1, Coordinates coord2)
 		{
@@ -134,5 +123,9 @@ namespace Position_Lib
 		{
 			return Math.PI * angle / 180.0;
 		}
+		
+		
 	}
+
+    
 }

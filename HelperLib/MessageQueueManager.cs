@@ -42,14 +42,14 @@ namespace HelperLib
 		public MessageQueueManager(bool isReader)
 		{
 			_isReader = isReader;
-			InitQueueEndPoints();
+//			InitQueueEndPoints();
 			
 		}
 
 		/// <summary>
 		/// Create the message queues and system event. 
 		/// </summary>
-		void InitQueueEndPoints()
+		public void InitQueueEndPoints()
 		{
 			//Create out reader and writer queues.  Since this queue has a name it is accessible
 			// by other programs. 

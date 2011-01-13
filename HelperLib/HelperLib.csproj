@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Globals.cs" />
+    <Compile Include="LSTasksConfig.cs" />
     <Compile Include="MessageQueueManager.cs" />
     <Compile Include="ObjectXMLSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

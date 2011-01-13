@@ -64,6 +64,7 @@
     <Compile Include="CellLocation\GoogleMapsCellService.cs" />
     <Compile Include="CellLocation\OpenCellIDCellService.cs" />
     <Compile Include="CellLocation\RILCellTowerInfo.cs" />
+    <Compile Include="GpsLocationClass.cs" />
     <Compile Include="PositionTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

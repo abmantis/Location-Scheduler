@@ -25,9 +25,9 @@ namespace Location_Scheduler
 	{
 		#region Declarations
 
-		int mLastTaskID = 0;
-		List<Task> mTaskArray = null;
-		SensePanelButtonItem mBtnAddTask = null;
+		int _LastTaskID = 0;
+		LSTasksConfig _tasksConfig = new LSTasksConfig();
+		SensePanelButtonItem _BtnAddTask = null;
 		MessageQueueManager _MsgQueueMgr = new MessageQueueManager(false);
 
 		#endregion
@@ -35,9 +35,8 @@ namespace Location_Scheduler
 		public FormMain()
         {
             InitializeComponent();
+			_MsgQueueMgr.InitQueueEndPoints();
 			senseHeaderCtrl.Text = StringTable.AppTittle;
-			int x = 0;
-			SenseAPIs.SenseNumericBox.Show("blalala",ref x);
         }
 
         #region Events
@@ -46,6 +45,8 @@ namespace Location_Scheduler
 		{			
 			SetupControls();
 			LoadTasks();
+
+			this.menuItemUseNonGpsLoc.Checked = _tasksConfig.UseCellLocation;
 		}
 
         private void menuItem1_Click(object sender, EventArgs e)
@@ -78,12 +79,15 @@ namespace Location_Scheduler
 
 		private void menuItemSetRefreshRate_Click(object sender, EventArgs e)
 		{
-
+			int rate = _tasksConfig.UpdateRate;
+			SenseAPIs.SenseNumericBox.Show("Refresh rate", 1, 99, ref rate);
+			_tasksConfig.UpdateRate = rate;
 		}
 
 		private void menuItemUseNonGpsLoc_Click(object sender, EventArgs e)
 		{
-
+			menuItemUseNonGpsLoc.Checked = !menuItemUseNonGpsLoc.Checked;
+			_tasksConfig.UseCellLocation = menuItemUseNonGpsLoc.Checked;
 		}
 
 
@@ -99,7 +103,7 @@ namespace Location_Scheduler
 		void taskList_Click(object Sender)
 		{
 			SensePanelItem panelIt = (SensePanelItem)Sender;
-			Task task = mTaskArray.Find(delegate(Task p) { return p.InternalIdentifier == (int)panelIt.Tag; });
+			Task task = _tasksConfig.TaskList.Find(delegate(Task p) { return p.InternalIdentifier == (int)panelIt.Tag; });
 			FormTaskEdit frmtaskedit = new FormTaskEdit(task);
 			DialogResult taskEditResult = Globals.ShowDialog(frmtaskedit, this);
 			switch (taskEditResult)
@@ -128,14 +132,13 @@ namespace Location_Scheduler
 			this.senseListCtrl.BeginUpdate();
 
 			// location button            
-			mBtnAddTask = new SensePanelButtonItem("mBtnAddTask");
-			mBtnAddTask.LabelText = "";
-			mBtnAddTask.Text = "Add Task";
-			mBtnAddTask.OnClick += new SensePanelButtonItem.ClickEventHandler(btAdd_Click);
-			this.senseListCtrl.AddItem(mBtnAddTask);	
+			_BtnAddTask = new SensePanelButtonItem("_BtnAddTask");
+			_BtnAddTask.LabelText = "";
+			_BtnAddTask.Text = "Add Task";
+			_BtnAddTask.OnClick += new SensePanelButtonItem.ClickEventHandler(btAdd_Click);
+			this.senseListCtrl.AddItem(_BtnAddTask);	
 
 			this.senseListCtrl.AddItem(new SensePanelDividerItem("DividerItemTasks", "Tasks"));
-			
 
 			// we are done so turn on UI updating
 			this.senseListCtrl.EndUpdate();
@@ -147,11 +150,11 @@ namespace Location_Scheduler
 		{
 			lock (senseListCtrl)
 			{
-				mLastTaskID++;
-				task.InternalIdentifier = mLastTaskID;
+				_LastTaskID++;
+				task.InternalIdentifier = _LastTaskID;
 				AddPanelItemForTask(task);
 
-				mTaskArray.Add(task);
+				_tasksConfig.TaskList.Add(task);
 				SaveTasks();
 			}
 		}
@@ -171,7 +174,7 @@ namespace Location_Scheduler
 					}
 				}
 
-				mTaskArray.Remove(task);
+				_tasksConfig.TaskList.Remove(task);
 				SaveTasks();
 			}
 		}
@@ -189,19 +192,20 @@ namespace Location_Scheduler
 
 		private void LoadTasks()
 		{
-			mTaskArray = TasksLoader.LoadTasksFromFile();
+			_tasksConfig = TasksLoader.LoadTasksFromFile();
+			List<Task> taskList = _tasksConfig.TaskList;
 			// Set internal identifiers and add panel items for each task
-			foreach (Task task in mTaskArray)
+			foreach (Task task in taskList)
 			{
-				mLastTaskID++;
-				task.InternalIdentifier = mLastTaskID;
+				_LastTaskID++;
+				task.InternalIdentifier = _LastTaskID;
 				AddPanelItemForTask(task);
 			}		
 		}
 
 		private void SaveTasks()
 		{
-			TasksLoader.SaveTasksToFile(mTaskArray);
+			TasksLoader.SaveTasksToFile(_tasksConfig);
 			_MsgQueueMgr.Write(NotifMessages.NOTIF_SCAN);
 		}
 

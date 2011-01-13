@@ -5,32 +5,30 @@ using System.Text;
 using System.IO;
 
 namespace HelperLib
-{
-	public static class TasksLoader
+{	
+	public class TasksLoader
 	{
-		static String mFileToSaveTasks = Globals.GetCurrentPath() + "\\tasks.xml";
+		private static String _FileToSaveTasks = Globals.GetCurrentPath() + "\\tasks.xml";
 
-
-		public static void SaveTasksToFile(List<Task> taskArray)
+		public static void SaveTasksToFile(LSTasksConfig tasksConfig)
 		{
-			ObjectXMLSerializer<List<Task>>.Save(taskArray, mFileToSaveTasks);
+			ObjectXMLSerializer<LSTasksConfig>.Save(tasksConfig, _FileToSaveTasks);
 		}
 
-		public static List<Task> LoadTasksFromFile()
+		public static LSTasksConfig LoadTasksFromFile()
 		{
-			List<Task> taskArray;
+			LSTasksConfig tasksConfig;
 			try
 			{
-
-				taskArray = ObjectXMLSerializer<List<Task>>.Load(mFileToSaveTasks);
+				tasksConfig = ObjectXMLSerializer<LSTasksConfig>.Load(_FileToSaveTasks);
 			}
 #pragma warning disable 0168
 			catch (FileNotFoundException ex)
 #pragma warning restore 0168
 			{
-				taskArray = new List<Task>();
+				tasksConfig = new LSTasksConfig();
 			}
-			return taskArray;
+			return tasksConfig;
 		}
 	}
 }

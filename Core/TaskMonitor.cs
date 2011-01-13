@@ -22,7 +22,7 @@ namespace Core
 		List<TasksMonitorTask> _taskMonitorList = new List<TasksMonitorTask>();
 		bool _initDone = false;
 		bool _shutdown = false;
-		int _updateInterval = 4 * 1000; 
+		int _updateRate = 2000; 
 		Time _lastUpdate = null;
 		int _errorCount = 0;
 		PositionTools _positionTools = new PositionTools();
@@ -30,6 +30,8 @@ namespace Core
 		public TasksMonitor()
 		{
 			_MsgQueueMgr.Received += new MessageQueueManager.ReceivedEventHandler(MsgQueueMgr_Received);
+			_MsgQueueMgr.InitQueueEndPoints();
+
 			int msToNext = LoadTasks();
 			if (_taskMonitorList.Count > 0)
 			{				
@@ -70,10 +72,15 @@ namespace Core
 		{
 			lock (_taskMonitorList)
 			{
-				int msToNext = 86400000; //24h * 60m * 60s * 1000 <- the max wait time is 24h
 				Globals.WriteToDebugFile("TaskMonitor: Loading Tasks");
+				int msToNext = 86400000; //24h * 60m * 60s * 1000 <- the max wait time is 24h
 				Time now = new Time(DateTime.Now);
-				List<Task> taskList = TasksLoader.LoadTasksFromFile();
+				
+				LSTasksConfig tasksCfg = TasksLoader.LoadTasksFromFile();
+				_updateRate = tasksCfg.UpdateRate * 1000;
+				_positionTools.UseCellLocation = tasksCfg.UseCellLocation;
+				List<Task> taskList = tasksCfg.TaskList;
+				
 				foreach (Task task in taskList)
 				{
 					TasksMonitorTask tmt = new TasksMonitorTask();
@@ -137,9 +144,9 @@ namespace Core
 				}
 			}
 
-			if (msToNext < _updateInterval)
+			if (msToNext < _updateRate)
 			{
-				msToNext = _updateInterval;
+				msToNext = _updateRate;
 			}
 
 			_lastUpdate = now;
