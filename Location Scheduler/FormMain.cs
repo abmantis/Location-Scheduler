@@ -82,12 +82,14 @@ namespace Location_Scheduler
 			int rate = _tasksConfig.UpdateRate;
 			SenseAPIs.SenseNumericBox.Show("Refresh rate", 1, 99, ref rate);
 			_tasksConfig.UpdateRate = rate;
+			SaveTasks();
 		}
 
 		private void menuItemUseNonGpsLoc_Click(object sender, EventArgs e)
 		{
 			menuItemUseNonGpsLoc.Checked = !menuItemUseNonGpsLoc.Checked;
 			_tasksConfig.UseCellLocation = menuItemUseNonGpsLoc.Checked;
+			SaveTasks();
 		}
 
 

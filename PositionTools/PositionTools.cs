@@ -25,8 +25,7 @@ namespace Position_Lib
 		}
 
 		public void Init()
-		{
-			Globals.WriteToDebugFile("PositionTools: Init");
+		{			
 			_gpsLoc.Init();
 		}
 

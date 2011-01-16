@@ -29,11 +29,18 @@ namespace HelperLib
 		public static void WriteToDebugFile(string text)
 		{
 #if DEBUG
-			DateTime now = DateTime.Now;
-			StreamWriter SW;
-			SW = File.AppendText("\\Storage Card\\debug.txt");
-			SW.WriteLine(now.ToString() + ": " + text);
-			SW.Close();
+			try
+			{
+				DateTime now = DateTime.Now;
+				StreamWriter SW;
+				SW = File.AppendText("\\Storage Card\\debug.txt");
+				SW.WriteLine(now.ToString() + ": " + text);
+				SW.Close();
+			}
+			catch (System.Exception)
+			{
+				
+			}
 #endif
 		}
 

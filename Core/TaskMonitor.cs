@@ -26,6 +26,7 @@ namespace Core
 		Time _lastUpdate = null;
 		int _errorCount = 0;
 		PositionTools _positionTools = new PositionTools();
+		ActionsManager _actionsMgr = new ActionsManager();
 
 		public TasksMonitor()
 		{
@@ -221,6 +222,7 @@ namespace Core
 			Globals.WriteToDebugFile("TaskMonitor: Task " + task.Subject + " distance: " + distance);
 			if (distance > task.Radius) return false;
 
+			_actionsMgr.ProcessTask(task);
 			Globals.WriteToDebugFile("TaskMonitor: Processed task: " + task.Subject);
 			return true;
 		}
