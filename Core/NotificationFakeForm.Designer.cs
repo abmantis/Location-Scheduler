@@ -1,6 +1,6 @@
 ﻿namespace Core
 {
-	partial class FakeForm
+	partial class NotificationFakeForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,12 +29,22 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
 			this.mainMenu1 = new System.Windows.Forms.MainMenu();
-			this.Menu = this.mainMenu1;
+			this.SuspendLayout();
+			// 
+			// NotificationFakeForm
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.Text = "Form2";
 			this.AutoScroll = true;
+			this.ClientSize = new System.Drawing.Size(240, 268);
+			this.Menu = this.mainMenu1;
+			this.Name = "NotificationFakeForm";
+			this.Text = "Form2";
+			this.Load += new System.EventHandler(this.NotificationFakeForm_Load);
+			this.Activated += new System.EventHandler(this.NotificationFakeForm_Activated);
+			this.ResumeLayout(false);
+
 		}
 
 		#endregion

@@ -107,6 +107,9 @@
     <None Include="Resources\Notif.ico" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="NotificationFakeForm.resx">
+      <DependentUpon>NotificationFakeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

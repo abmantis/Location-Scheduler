@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Core;
 using System.Threading;
 using christec.windowsce.forms;
+using System.Runtime.InteropServices;
 
 namespace Tester
 {
@@ -26,7 +27,7 @@ namespace Tester
 		}
 
 		private void button1_Click(object sender, EventArgs e)
-		{	
+		{			
 			//if (_fakeNotifForm._softkeyNotification == null)
 			//{
 				//_fakeNotifForm.Show();
@@ -56,7 +57,7 @@ namespace Tester
 			//m_WorkerThread = new Thread(new ThreadStart(this.WorkerThreadFunction));			
 			//m_WorkerThread.Start();
 		
-			Thread.Sleep(10000);
+			Thread.Sleep(6000);
 		}
 
 		// Worker thread function.
@@ -79,7 +80,16 @@ namespace Tester
 
 		private void button2_Click(object sender, EventArgs e)
 		{
+			am.Shutdown();
 			this.Close();
 		}
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			ShowWindow(this.Handle, SW_MINIMIZED);
+		}
+		[DllImport("coredll.dll")]
+		static extern int ShowWindow(IntPtr hWnd, int nCmdShow);
+		const int SW_MINIMIZED = 6;
 	}
 }
