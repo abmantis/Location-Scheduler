@@ -47,8 +47,9 @@ namespace Core
 		private void Shutdown()
 		{
 			Globals.WriteToDebugFile("TaskMonitor: Shutdown");
+			_actionsMgr.Shutdown();
 			_MsgQueueMgr.Shutdown();
-			_positionTools.Shutdown();
+			_positionTools.Shutdown();			
 		}
 
 		private void MsgQueueMgr_Received(object sender, ReceivedMessageArgs args)

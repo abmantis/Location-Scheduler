@@ -12,26 +12,26 @@ namespace Core
 {
 	public partial class NotificationFakeForm : Form
 	{
+		private int _notifIndex = 1;
+		private List<string> _notifTexts = new List<string>();
+		object _notifLocker = new object();
 		public NotificationWithSoftKeys _softkeyNotification = null;
+
 		public NotificationFakeForm()
 		{
 			InitializeComponent();
-			
-
 		}
-
-	
+			
 		private void NotificationFakeForm_Load(object sender, EventArgs e)
 		{
-			
-			//_softkeyNotification.Visible = false;
 			this.Visible = false;
-			//ShowNotif();
 		}
 
-		public void ShowNotif()
+		public void ShowNotif(String text)
 		{
-			this.Visible = false;
+			_notifTexts.Add(text);
+			_notifIndex = 1;
+
 			if (_softkeyNotification == null)
 			{
 				_softkeyNotification = new NotificationWithSoftKeys();
@@ -44,9 +44,9 @@ namespace Core
 				_softkeyNotification.RightSoftKeyClick += new EventHandler(softkeyNotificationCustom2_RightSoftKeyClick);
 			}
 
-			_softkeyNotification.Caption = String.Format("Location Scheduler\t{0} of {1}", 0, 2);
-			_softkeyNotification.Text = "XXX";
-			_softkeyNotification.Visible = true;
+			_softkeyNotification.Caption = String.Format("Location Scheduler\t{0} of {1}", _notifIndex, _notifTexts.Count);
+			_softkeyNotification.Text = text;
+			_softkeyNotification.Visible = true;	
 		}
 
 		private void NotificationFakeForm_Activated(object sender, EventArgs e)
@@ -56,24 +56,21 @@ namespace Core
 
 		private void softkeyNotification_SpinnerClick(object sender, SpinnerClickEventArgs e)
 		{
-			MessageBox.Show("LALALA");
-			//lock (_notifLocker)
-			//{
-			//    int notifCount = _notifTexts.Count;
-			//    if (e.Forward)
-			//        _notifIndex = Math.Min(notifCount, ++_notifIndex);
-			//    else
-			//        _notifIndex = Math.Max(1, --_notifIndex);
+			int notifCount = _notifTexts.Count;
+			if (e.Forward)
+				_notifIndex = Math.Min(notifCount, ++_notifIndex);
+			else
+				_notifIndex = Math.Max(1, --_notifIndex);
 
-			//    _softkeyNotification.Caption = String.Format("Location Scheduler\t{0} of {1}", _notifIndex, notifCount);
-			//    _softkeyNotification.Text = _notifTexts[notifCount - _notifIndex];
-			//}
+			_softkeyNotification.Caption = String.Format("Location Scheduler\t{0} of {1}", _notifIndex, notifCount);
+			_softkeyNotification.Text = _notifTexts[notifCount - _notifIndex];
 		}
 
 		private void softkeyNotificationCustom2_RightSoftKeyClick(object sender, EventArgs e)
 		{
-			MessageBox.Show("XXX");
-			//_softkeyNotification = null;
+			_notifIndex = 1;
+			_notifTexts.Clear();
+			_softkeyNotification = null;
 		}
 	}
 }

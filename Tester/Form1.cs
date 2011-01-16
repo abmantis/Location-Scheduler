@@ -45,7 +45,7 @@ namespace Tester
 			//_fakeNotifForm._softkeyNotification.Visible = true;
 			//_fakeNotifForm.Refresh();
 
-			am.ShowNotification("SDASD");
+			am.ShowNotification("<b>AAAAAAAAA</b><br><br>" + DateTime.Now);
 
 			//return;
 			//if (m_WorkerThread != null)
