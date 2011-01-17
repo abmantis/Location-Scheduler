@@ -72,11 +72,13 @@ namespace Location_Scheduler
 
 			this.map.CurrentPosition = _startPos;
 			_centerCross = new GMapMarkerCross(this.map.CurrentPosition);
+			_centerCross.Pen.Color = Color.Red;
 
 			_radiusCircle = new GMapMarkerCircle(_startPos);
 			_radiusCircle.Radius = _StartRadius;
 			_radiusCircle.Fill = false;
-			_radiusCircle.OutlinePen.Width = 3;
+			_radiusCircle.OutlinePen.Width = 2;
+			_radiusCircle.OutlinePen.Color = Color.Red;
 
 			// Add markers
 			_overlay.Markers.Add(_centerCross);
@@ -138,6 +140,16 @@ namespace Location_Scheduler
 		}
 
 		#endregion
+
+		private void menuItemSetRadius_Click(object sender, EventArgs e)
+		{
+			FormMapRadius frmRadius = new FormMapRadius();
+			frmRadius.Radius = _radiusCircle.Radius;
+			if (Globals.ShowDialog(frmRadius, this) == DialogResult.OK)
+			{
+				_radiusCircle.Radius = frmRadius.Radius;				
+			}	
+		}
 
 	}
 }

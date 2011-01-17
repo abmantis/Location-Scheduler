@@ -39,6 +39,7 @@
 			this.btSearch = new StedySoft.SenseSDK.SenseButtonControl();
 			this.btZoomIn = new StedySoft.SenseSDK.SenseButtonControl();
 			this.btZoomOut = new StedySoft.SenseSDK.SenseButtonControl();
+			this.menuItemSetRadius = new System.Windows.Forms.MenuItem();
 			this.SuspendLayout();
 			// 
 			// mainMenu1
@@ -53,6 +54,7 @@
 			// 
 			// menuItemOptions
 			// 
+			this.menuItemOptions.MenuItems.Add(this.menuItemSetRadius);
 			this.menuItemOptions.MenuItems.Add(this.menuItemSatellite);
 			this.menuItemOptions.MenuItems.Add(this.menuItemCancel);
 			this.menuItemOptions.Text = "Options";
@@ -124,6 +126,11 @@
 			this.btZoomOut.Text = "Zoom out";
 			this.btZoomOut.Click += new System.EventHandler(this.btZoomOut_Click);
 			// 
+			// menuItemSetRadius
+			// 
+			this.menuItemSetRadius.Text = "Set radius";
+			this.menuItemSetRadius.Click += new System.EventHandler(this.menuItemSetRadius_Click);
+			// 
 			// FormMap
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -139,7 +146,7 @@
 			this.Controls.Add(this.senseHeaderCtrl);
 			this.Menu = this.mainMenu1;
 			this.Name = "FormMap";
-			this.Text = StringTable.AppTittle;
+			this.Text = "Location Scheduler";
 			this.Load += new System.EventHandler(this.FormMap_Load);
 			this.ResumeLayout(false);
 
@@ -156,5 +163,6 @@
 		private StedySoft.SenseSDK.SenseButtonControl btSearch;
 		private StedySoft.SenseSDK.SenseButtonControl btZoomIn;
 		private StedySoft.SenseSDK.SenseButtonControl btZoomOut;
+		private System.Windows.Forms.MenuItem menuItemSetRadius;
 	}
 }
