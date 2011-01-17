@@ -91,9 +91,10 @@ namespace Location_Scheduler
 		void OnBtnSetLocation(object Sender)
 		{
 			FormMap frmMap = new FormMap();
+			frmMap.StartRadius = (int)(mTask.Radius * 1000);
 			if (mTask.LocationCoord != null)
 			{
-				frmMap.StartPos = new PointLatLng(mTask.LocationCoord.Latitude, mTask.LocationCoord.Longitude);
+				frmMap.StartPos = new PointLatLng(mTask.LocationCoord.Latitude, mTask.LocationCoord.Longitude);				
 			}
 			if (Globals.ShowDialog(frmMap, this) == DialogResult.OK)
 			{
@@ -101,6 +102,7 @@ namespace Location_Scheduler
 				coord.Latitude = frmMap.CenterCross.Position.Lat;
 				coord.Longitude = frmMap.CenterCross.Position.Lng;
 				mTask.LocationCoord = coord;
+				mTask.Radius = (frmMap.RadiusCircle.Radius * 0.001f);
 
 				Placemark place = GMaps.Instance.GetPlacemarkFromGeocoder(frmMap.CenterCross.Position);
 				if (place != null)

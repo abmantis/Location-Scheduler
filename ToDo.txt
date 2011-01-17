@@ -2,5 +2,4 @@
 - In/out area action;
 - simple application selection;
 - multiple monitoring periods;
-- global refresh rate;
-- manual update mode;
+

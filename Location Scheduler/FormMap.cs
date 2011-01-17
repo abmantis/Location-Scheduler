@@ -18,14 +18,25 @@ namespace Location_Scheduler
 
 		private GMapOverlay _overlay;
 		private PointLatLng _startPos = new PointLatLng(41.1780080, -8.6087320);
+		private int _StartRadius = 0;		
 		private bool _hasStartPos = false;
 		private GMapMarkerCross _centerCross = null;
-
+		private GMapMarkerCircle _radiusCircle = null;
+		
 		#region Properties
 		public GMap.NET.PointLatLng StartPos
 		{
 			get { return _startPos; }
 			set { _startPos = value; _hasStartPos = true; }
+		}
+		public int StartRadius
+		{
+			get { return _StartRadius; }
+			set { _StartRadius = value; }
+		}
+		public GMapMarkerCircle RadiusCircle
+		{
+			get { return _radiusCircle; }
 		}
 		public GMapMarkerCross CenterCross
 		{
@@ -60,10 +71,16 @@ namespace Location_Scheduler
 			this.map.Overlays.Add(_overlay);
 
 			this.map.CurrentPosition = _startPos;
-			_centerCross = new GMapMarkerCross(this.map.CurrentPosition);			
+			_centerCross = new GMapMarkerCross(this.map.CurrentPosition);
 
-			// Add Center cross			
+			_radiusCircle = new GMapMarkerCircle(_startPos);
+			_radiusCircle.Radius = _StartRadius;
+			_radiusCircle.Fill = false;
+			_radiusCircle.OutlinePen.Width = 3;
+
+			// Add markers
 			_overlay.Markers.Add(_centerCross);
+			_overlay.Markers.Add(_radiusCircle);
 
 			if (_hasStartPos) map.Zoom = 14;
 		}
@@ -71,6 +88,7 @@ namespace Location_Scheduler
 		private void Map_OnCurrentPositionChanged(PointLatLng point)
 		{
 			_centerCross.Position = point;
+			_radiusCircle.Position = point;
 		}
 
 		private void menuItemSatellite_Click(object sender, EventArgs e)
